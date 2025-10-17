@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Coins, Users, TrendingUp, ArrowLeft } from "lucide-react";
+import { Coins, Users, TrendingUp, ArrowLeft, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 interface UserStats {
@@ -25,6 +25,26 @@ const Admin = () => {
 
   useEffect(() => {
     checkAdminAndLoadData();
+    
+    // Setup realtime subscription
+    const channel = supabase
+      .channel('admin-profiles-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'profiles'
+        },
+        () => {
+          loadAdminData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const checkAdminAndLoadData = async () => {
@@ -62,7 +82,7 @@ const Admin = () => {
 
   const loadAdminData = async () => {
     try {
-      // Buscar todos os usuários
+      // Buscar todos os usuários com saldo em tempo real
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select("id, nickname, balance, total_mined, referral_code, is_mining")
@@ -70,12 +90,17 @@ const Admin = () => {
 
       if (profilesError) throw profilesError;
 
+      console.log("Dados carregados:", profiles);
       setUsers(profiles || []);
       setTotalUsers(profiles?.length || 0);
 
-      // Calcular total minerado
-      const total = profiles?.reduce((acc, user) => acc + parseFloat(user.total_mined?.toString() || "0"), 0) || 0;
-      setTotalMined(total);
+      // Calcular total minerado somando balance de todos
+      const totalBalance = profiles?.reduce((acc, user) => {
+        const balance = parseFloat(user.balance?.toString() || "0");
+        return acc + balance;
+      }, 0) || 0;
+      
+      setTotalMined(totalBalance);
 
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
@@ -101,19 +126,29 @@ const Admin = () => {
         <header className="mb-8 relative">
           <div className="absolute inset-0 bg-gradient-primary opacity-5 blur-3xl"></div>
           <div className="relative z-10">
-            <Button
-              variant="outline"
-              onClick={() => navigate("/dashboard")}
-              className="mb-4 border-primary/30 hover:bg-primary/10"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar
-            </Button>
+            <div className="flex items-center justify-between mb-4">
+              <Button
+                variant="outline"
+                onClick={() => navigate("/dashboard")}
+                className="border-primary/30 hover:bg-primary/10"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Voltar
+              </Button>
+              <Button
+                variant="outline"
+                onClick={loadAdminData}
+                className="border-accent/30 hover:bg-accent/10"
+              >
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Atualizar
+              </Button>
+            </div>
             <h1 className="text-4xl font-bold text-gradient-primary text-glow tracking-tight">
               Painel Administrativo
             </h1>
             <p className="text-muted-foreground mt-2 text-sm uppercase tracking-wider">
-              Visão completa da rede Stonks
+              Visão completa da rede Stonks • Atualização em tempo real
             </p>
           </div>
         </header>
@@ -227,14 +262,20 @@ const Admin = () => {
                         </code>
                       </td>
                       <td className="py-4 px-4 text-right">
-                        <span className="text-gradient-gold font-bold">
-                          {parseFloat(user.balance?.toString() || "0").toFixed(8)}
-                        </span>
+                        <div className="flex flex-col items-end">
+                          <span className="text-gradient-gold font-bold text-base">
+                            {parseFloat(user.balance?.toString() || "0").toFixed(8)}
+                          </span>
+                          <span className="text-xs text-muted-foreground">STK</span>
+                        </div>
                       </td>
                       <td className="py-4 px-4 text-right">
-                        <span className="text-gradient-cyber font-semibold">
-                          {parseFloat(user.total_mined?.toString() || "0").toFixed(8)}
-                        </span>
+                        <div className="flex flex-col items-end">
+                          <span className="text-gradient-cyber font-semibold text-base">
+                            {parseFloat(user.total_mined?.toString() || "0").toFixed(8)}
+                          </span>
+                          <span className="text-xs text-muted-foreground">STK</span>
+                        </div>
                       </td>
                       <td className="py-4 px-4 text-center">
                         <span
