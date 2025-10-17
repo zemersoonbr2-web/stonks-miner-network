@@ -182,32 +182,41 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <header className="mb-8">
-          <div className="flex items-center justify-between mb-4">
+      <div className="container mx-auto px-4 py-8 max-w-6xl relative">
+        <header className="mb-8 relative">
+          <div className="absolute inset-0 bg-gradient-primary opacity-5 blur-3xl"></div>
+          <div className="flex items-center justify-between mb-4 relative z-10">
             <div>
-              <h1 className="text-3xl font-bold text-gradient-primary text-glow">
+              <h1 className="text-4xl font-bold text-gradient-primary text-glow tracking-tight">
                 Stonks Network
               </h1>
-              <p className="text-muted-foreground mt-1">Bem-vindo, {profile?.nickname}!</p>
+              <p className="text-muted-foreground mt-2 text-sm uppercase tracking-wider">
+                Bem-vindo, <span className="text-gradient-cyber font-semibold">{profile?.nickname}</span>
+              </p>
             </div>
-            <Button variant="outline" onClick={() => navigate("/profile")}>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate("/profile")}
+              className="border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
+            >
               Perfil
             </Button>
           </div>
         </header>
 
         <div className="grid gap-6 md:grid-cols-3 mb-8">
-          <Card className="p-6 bg-gradient-to-br from-card to-accent/20 border-primary/20">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full overflow-hidden bg-card shadow-glow flex-shrink-0">
+          <Card className="glass-card p-6 hover-glow border-primary/30 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-primary opacity-5"></div>
+            <div className="flex items-center gap-4 relative z-10">
+              <div className="w-16 h-16 rounded-full overflow-hidden shadow-glow-strong flex-shrink-0 ring-2 ring-primary/50">
                 <img src={stonksLogo} alt="Stonks Logo" className="w-full h-full object-cover" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Saldo</p>
-                <p className="text-2xl font-bold text-gradient-gold text-shadow-strong">
-                  {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(8)} STK
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Saldo Total</p>
+                <p className="text-2xl font-bold text-gradient-gold text-glow">
+                  {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(8)}
                 </p>
+                <p className="text-xs text-muted-foreground">STK</p>
                 {profile?.is_mining && earnedSoFar > 0 && (
                   <p className="text-xs text-success mt-1 text-glow">+{earnedSoFar.toFixed(8)} minerando</p>
                 )}
@@ -215,118 +224,133 @@ const Dashboard = () => {
             </div>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-card to-accent/10 border-accent/30">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-gradient-gold">
-                <Users className="h-6 w-6 text-accent-foreground" />
+          <Card className="glass-card p-6 hover-glow border-secondary/30 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent"></div>
+            <div className="flex items-center gap-4 relative z-10">
+              <div className="p-3 rounded-xl bg-gradient-to-br from-secondary/20 to-secondary/5 shadow-glow">
+                <Users className="h-6 w-6 text-secondary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Referências</p>
-                <p className="text-2xl font-bold text-gradient-primary">{referralCount}</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Referências</p>
+                <p className="text-3xl font-bold text-gradient-cyber text-glow">{referralCount}</p>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-card to-primary/10 border-primary/20">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-primary/10">
-                <Clock className="h-6 w-6 text-primary" />
+          <Card className="glass-card p-6 hover-glow border-accent/30 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent"></div>
+            <div className="flex items-center gap-4 relative z-10">
+              <div className="p-3 rounded-xl bg-gradient-to-br from-accent/20 to-accent/5 shadow-glow">
+                <Clock className="h-6 w-6 text-accent" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Status</p>
-                <p className="text-lg font-bold text-gradient-primary">{profile?.is_mining ? "Minerando" : "Parado"}</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Status Mineração</p>
+                <p className="text-xl font-bold text-gradient-cyber text-glow">
+                  {profile?.is_mining ? "Ativo" : "Inativo"}
+                </p>
               </div>
             </div>
           </Card>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <Card className="p-8 bg-gradient-to-br from-card via-primary/5 to-primary/10 border-primary/30">
-            <div className="text-center">
-              <div className="inline-flex p-4 rounded-full bg-primary/10 mb-4">
-                <Coins className="h-12 w-12 text-primary" />
+          <Card className="glass-card p-8 hover-glow border-primary/40 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-hero opacity-10"></div>
+            <div className="text-center relative z-10">
+              <div className="inline-flex p-5 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 mb-6 shadow-glow-strong">
+                <Coins className="h-16 w-16 text-primary" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-gradient-primary text-glow">Mineração Diária</h2>
+              <h2 className="text-3xl font-bold mb-3 text-gradient-primary text-glow tracking-tight">
+                Mineração 24h
+              </h2>
               {profile?.is_mining ? (
                 <>
-                  <p className="text-muted-foreground mb-4">Mineração em andamento</p>
-                  <div className="text-5xl font-bold text-gradient-gold text-glow mb-4">{timeRemaining}</div>
+                  <p className="text-sm text-muted-foreground mb-6 uppercase tracking-wider">Em Progresso</p>
+                  <div className="text-6xl font-bold text-gradient-cyber text-glow mb-6 tracking-tight">
+                    {timeRemaining}
+                  </div>
                   
-                  <div className="mb-6">
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Progresso</span>
-                      <span className="font-bold text-success">+{earnedSoFar.toFixed(8)} STK</span>
+                  <div className="mb-8 bg-card/50 rounded-xl p-4 backdrop-blur-sm border border-primary/20">
+                    <div className="flex justify-between text-sm mb-3">
+                      <span className="text-muted-foreground uppercase tracking-wider text-xs">Progresso</span>
+                      <span className="font-bold text-success text-glow">+{earnedSoFar.toFixed(8)} STK</span>
                     </div>
-                    <Progress value={currentProgress} className="h-3" />
-                    <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                    <Progress value={currentProgress} className="h-2 mb-3" />
+                    <div className="flex justify-between text-xs text-muted-foreground">
                       <span>{currentProgress.toFixed(2)}%</span>
-                      <span>0.05 STK no total</span>
+                      <span className="text-gradient-gold">Meta: 0.05 STK</span>
                     </div>
                   </div>
                 </>
               ) : (
                 <>
-                  <p className="text-muted-foreground mb-6">
-                    Assista um anúncio e mine 0.05 STK por 24 horas
+                  <p className="text-muted-foreground mb-8 text-sm">
+                    Assista um anúncio e comece a minerar
                   </p>
                   <Button 
                     size="lg" 
-                    className="w-full bg-gradient-to-r from-primary to-primary-glow hover:opacity-90"
+                    className="w-full bg-gradient-primary hover:shadow-glow-strong transition-all duration-300 text-lg py-6 font-semibold"
                     onClick={handleStartMining}
                   >
-                    Ativar Mineração
+                    <Coins className="mr-2 h-5 w-5" />
+                    Iniciar Mineração
                   </Button>
-                  <p className="text-xs text-muted-foreground mt-4">
-                    * Necessário assistir anúncio completo
+                  <p className="text-xs text-muted-foreground mt-4 uppercase tracking-wider">
+                    Recompensa: 0.05 STK
                   </p>
                 </>
               )}
             </div>
           </Card>
 
-          <Card className="p-8">
-            <h3 className="text-xl font-bold mb-4 text-gradient-primary">Seu Código de Convite</h3>
-            <div className="bg-accent/50 rounded-lg p-4 mb-4">
-              <p className="text-center text-2xl font-mono font-bold text-gradient-gold text-glow">
-                {profile?.referral_code}
+          <Card className="glass-card p-8 hover-glow border-accent/40 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-gold opacity-5"></div>
+            <div className="relative z-10">
+              <h3 className="text-2xl font-bold mb-6 text-gradient-gold text-glow tracking-tight">
+                Código de Convite
+              </h3>
+              <div className="glass-card rounded-xl p-6 mb-6 border-accent/30 shadow-glow">
+                <p className="text-center text-3xl font-mono font-bold text-gradient-cyber text-glow tracking-wider">
+                  {profile?.referral_code}
+                </p>
+              </div>
+              <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                Compartilhe seu código e ganhe <span className="text-gradient-gold font-semibold">10%</span> do que seus indicados mineram!
               </p>
+              <Button 
+                variant="outline" 
+                className="w-full border-accent/50 hover:bg-accent/10 hover:border-accent transition-all duration-300 py-6 text-lg font-semibold"
+                onClick={() => {
+                  navigator.clipboard.writeText(profile?.referral_code || "");
+                  toast.success("Código copiado!");
+                }}
+              >
+                Copiar Código
+              </Button>
             </div>
-            <p className="text-sm text-muted-foreground mb-4">
-              Compartilhe seu código e ganhe 10% do que seus indicados mineram!
-            </p>
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={() => {
-                navigator.clipboard.writeText(profile?.referral_code || "");
-                toast.success("Código copiado!");
-              }}
-            >
-              Copiar Código
-            </Button>
           </Card>
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
           <Button 
             variant="outline" 
-            className="w-full"
+            className="w-full border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 py-6"
             onClick={() => navigate("/community")}
           >
-            <Users className="mr-2 h-4 w-4" />
+            <Users className="mr-2 h-5 w-5" />
             Comunidade
           </Button>
           <Button 
             variant="outline" 
-            className="w-full"
+            className="w-full border-secondary/30 hover:bg-secondary/10 hover:border-secondary/50 transition-all duration-300 py-6"
             onClick={() => navigate("/support")}
           >
-            <TrendingUp className="mr-2 h-4 w-4" />
+            <TrendingUp className="mr-2 h-5 w-5" />
             Apoie o Projeto
           </Button>
           <Button 
             variant="outline" 
-            className="w-full"
+            className="w-full border-destructive/30 hover:bg-destructive/10 hover:border-destructive/50 transition-all duration-300 py-6"
             onClick={async () => {
               await supabase.auth.signOut();
               navigate("/auth");
