@@ -135,22 +135,30 @@ const Admin = () => {
 
       if (sessionsError) throw sessionsError;
 
+      console.log("=== ADMIN DEBUG ===");
       console.log("Profiles:", profiles);
       console.log("Active sessions:", sessions);
 
       // Calcular progresso e ganhos para cada usuário
+      const now = new Date().getTime();
       const usersWithProgress: UserStats[] = profiles?.map(profile => {
         const session = sessions?.find(s => s.user_id === profile.id);
         
         if (session && profile.is_mining) {
-          const now = new Date().getTime();
           const start = new Date(session.started_at).getTime();
           const end = new Date(session.ends_at).getTime();
-          const totalDuration = end - start;
-          const elapsed = now - start;
+          const totalDuration = end - start; // 24 horas em ms
+          const elapsed = Math.max(0, now - start); // tempo decorrido
           
           const progress = Math.min((elapsed / totalDuration) * 100, 100);
           const earning = Math.min((elapsed / totalDuration) * 0.05, 0.05);
+          
+          console.log(`User ${profile.nickname}:`, {
+            elapsed_hours: (elapsed / (1000 * 60 * 60)).toFixed(2),
+            progress: progress.toFixed(2) + '%',
+            earning: earning.toFixed(8),
+            balance: profile.balance
+          });
           
           return {
             ...profile,
@@ -181,6 +189,10 @@ const Admin = () => {
       const activeMining = usersWithProgress.reduce((acc, user) => {
         return acc + (user.earning_now || 0);
       }, 0);
+      
+      console.log("Total balance (includes mining):", totalBalance.toFixed(8));
+      console.log("Currently being mined:", activeMining.toFixed(8));
+      console.log("=== END DEBUG ===");
       
       setTotalMined(totalBalance);
       setCurrentlyMining(activeMining);
@@ -317,8 +329,8 @@ const Admin = () => {
                     <th className="text-left py-4 px-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">
                       Código
                     </th>
-                    <th className="text-right py-4 px-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">
-                      Saldo (STK)
+                    <th className="text-left py-4 px-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                      Saldo Atual (STK)
                     </th>
                     <th className="text-right py-4 px-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">
                       Total Minerado (STK)
@@ -349,17 +361,30 @@ const Admin = () => {
                           {user.referral_code}
                         </code>
                       </td>
-                      <td className="py-4 px-4 text-right">
-                        <div className="flex flex-col items-end">
-                          <span className="text-gradient-gold font-bold text-base">
-                            {(parseFloat(user.balance?.toString() || "0") + (user.earning_now || 0)).toFixed(8)}
-                          </span>
-                          {user.earning_now && user.earning_now > 0 && (
-                            <span className="text-xs text-success text-glow">
-                              +{user.earning_now.toFixed(8)} minerando
+                      <td className="py-4 px-4">
+                        <div className="flex flex-col">
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-gradient-gold font-bold text-lg">
+                              {(parseFloat(user.balance?.toString() || "0") + (user.earning_now || 0)).toFixed(8)}
                             </span>
+                            <span className="text-xs text-muted-foreground">STK</span>
+                          </div>
+                          {user.earning_now && user.earning_now > 0 && (
+                            <div className="flex items-center gap-1 mt-1">
+                              <div className="w-2 h-2 rounded-full bg-success animate-pulse"></div>
+                              <span className="text-xs text-success font-semibold">
+                                Minerando: +{user.earning_now.toFixed(8)}
+                              </span>
+                            </div>
                           )}
-                          <span className="text-xs text-muted-foreground">STK</span>
+                          {user.mining_progress && user.mining_progress > 0 && (
+                            <div className="mt-2 w-full bg-muted/30 rounded-full h-1.5">
+                              <div 
+                                className="bg-gradient-to-r from-primary to-accent h-1.5 rounded-full transition-all duration-1000"
+                                style={{ width: `${user.mining_progress}%` }}
+                              ></div>
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td className="py-4 px-4 text-right">
