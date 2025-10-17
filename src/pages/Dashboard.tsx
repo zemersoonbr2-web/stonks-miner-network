@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Coins, Users, Clock, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { AdDialog } from "@/components/AdDialog";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const Dashboard = () => {
   const [miningSession, setMiningSession] = useState<any>(null);
   const [timeRemaining, setTimeRemaining] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [showAdDialog, setShowAdDialog] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -104,6 +106,10 @@ const Dashboard = () => {
     } catch (error) {
       toast.error("Erro ao completar mineração");
     }
+  };
+
+  const handleStartMining = () => {
+    setShowAdDialog(true);
   };
 
   const startMining = async () => {
@@ -234,7 +240,7 @@ const Dashboard = () => {
                   <Button 
                     size="lg" 
                     className="w-full bg-gradient-to-r from-primary to-primary-glow hover:opacity-90"
-                    onClick={startMining}
+                    onClick={handleStartMining}
                   >
                     Ativar Mineração
                   </Button>
@@ -298,6 +304,12 @@ const Dashboard = () => {
           </Button>
         </div>
       </div>
+
+      <AdDialog 
+        open={showAdDialog}
+        onAdCompleted={startMining}
+        onClose={() => setShowAdDialog(false)}
+      />
     </div>
   );
 };
