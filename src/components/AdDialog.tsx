@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,6 +8,12 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+
+declare global {
+  interface Window {
+    adsbygoogle: any[];
+  }
+}
 
 interface AdDialogProps {
   open: boolean;
@@ -19,14 +25,21 @@ export const AdDialog = ({ open, onAdCompleted, onClose }: AdDialogProps) => {
   const [adLoading, setAdLoading] = useState(true);
   const [countdown, setCountdown] = useState(30);
   const [canSkip, setCanSkip] = useState(false);
+  const adRef = useRef<HTMLModElement>(null);
 
   useEffect(() => {
     if (!open) return;
 
-    // Simula o carregamento do anúncio
-    const loadTimer = setTimeout(() => {
+    // Carrega o anúncio do AdSense
+    try {
+      if (window.adsbygoogle && adRef.current) {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      }
       setAdLoading(false);
-    }, 2000);
+    } catch (error) {
+      console.error("Erro ao carregar anúncio:", error);
+      setAdLoading(false);
+    }
 
     // Countdown do anúncio
     const countdownInterval = setInterval(() => {
@@ -41,7 +54,6 @@ export const AdDialog = ({ open, onAdCompleted, onClose }: AdDialogProps) => {
     }, 1000);
 
     return () => {
-      clearTimeout(loadTimer);
       clearInterval(countdownInterval);
       setCountdown(30);
       setCanSkip(false);
@@ -72,25 +84,30 @@ export const AdDialog = ({ open, onAdCompleted, onClose }: AdDialogProps) => {
             </div>
           ) : (
             <div className="w-full">
-              {/* Área do anúncio - pode ser substituído por Google AdSense */}
-              <div className="bg-muted rounded-lg p-8 mb-4 min-h-[300px] flex flex-col items-center justify-center">
-                <div className="text-center space-y-4">
-                  <div className="text-6xl mb-4">📺</div>
-                  <h3 className="text-xl font-bold">Anúncio em Exibição</h3>
-                  <p className="text-muted-foreground">
-                    Este é um anúncio simulado. Em produção, aqui será exibido um anúncio real.
-                  </p>
-                  {!canSkip && (
-                    <div className="mt-4">
+              {/* Google AdMob/AdSense */}
+              <div className="mb-4 min-h-[250px] flex flex-col items-center justify-center bg-muted rounded-lg overflow-hidden">
+                <ins
+                  ref={adRef}
+                  className="adsbygoogle"
+                  style={{ display: "block" }}
+                  data-ad-client="ca-app-pub-8619429618534243"
+                  data-ad-slot="8905154937"
+                  data-ad-format="auto"
+                  data-full-width-responsive="true"
+                ></ins>
+                
+                {!canSkip && (
+                  <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
+                    <div className="text-center space-y-2">
                       <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary text-2xl font-bold">
                         {countdown}
                       </div>
-                      <p className="text-sm text-muted-foreground mt-2">
+                      <p className="text-sm text-muted-foreground">
                         segundos restantes
                       </p>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
 
               <Button
