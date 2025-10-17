@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Check last mining time (24h cooldown)
+    // Check last mining time (2 min cooldown for testing)
     const { data: profile } = await supabaseClient
       .from('profiles')
       .select('last_mining_at')
@@ -48,12 +48,12 @@ Deno.serve(async (req) => {
     if (profile?.last_mining_at) {
       const lastMining = new Date(profile.last_mining_at)
       const now = new Date()
-      const hoursSinceLastMining = (now.getTime() - lastMining.getTime()) / (1000 * 60 * 60)
+      const minutesSinceLastMining = (now.getTime() - lastMining.getTime()) / (1000 * 60)
       
-      if (hoursSinceLastMining < 24) {
+      if (minutesSinceLastMining < 2) {
         return new Response(JSON.stringify({ 
-          error: 'Must wait 24 hours between mining sessions',
-          hoursRemaining: Math.ceil(24 - hoursSinceLastMining)
+          error: 'Must wait 2 minutes between mining sessions',
+          minutesRemaining: Math.ceil(2 - minutesSinceLastMining)
         }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -61,9 +61,9 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Create new mining session (server-side timestamp)
+    // Create new mining session - 2 MINUTES FOR TESTING (normally 24 hours)
     const now = new Date()
-    const endsAt = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+    const endsAt = new Date(now.getTime() + 2 * 60 * 1000) // 2 minutes
 
     const { data: session, error: insertError } = await supabaseClient
       .from('mining_sessions')
