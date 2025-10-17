@@ -20,6 +20,7 @@ const Dashboard = () => {
   const [earnedSoFar, setEarnedSoFar] = useState(0);
   const [referralCount, setReferralCount] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -90,7 +91,7 @@ const Dashboard = () => {
   };
 
   const updateTimer = () => {
-    if (!miningSession) return;
+    if (!miningSession || isCompleting) return;
     
     const now = new Date().getTime();
     const start = new Date(miningSession.started_at).getTime();
@@ -99,10 +100,11 @@ const Dashboard = () => {
     const elapsed = now - start;
     const diff = end - now;
 
-    if (diff <= 0) {
+    if (diff <= 0 && !isCompleting) {
       setTimeRemaining("00:00:00");
       setCurrentProgress(100);
       setEarnedSoFar(0.05);
+      setIsCompleting(true);
       completeMining();
     } else {
       const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -120,7 +122,7 @@ const Dashboard = () => {
   };
 
   const completeMining = async () => {
-    if (!miningSession) return;
+    if (!miningSession || isCompleting) return;
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -138,14 +140,23 @@ const Dashboard = () => {
       const result = await response.json();
 
       if (!response.ok) {
+        if (result.error === 'Invalid or completed session') {
+          // Sessão já foi completada, apenas recarrega o perfil silenciosamente
+          setIsCompleting(false);
+          loadProfile();
+          return;
+        }
         toast.error(result.error || "Erro ao completar mineração");
+        setIsCompleting(false);
         return;
       }
 
       toast.success(`Mineração concluída! Você ganhou ${result.reward} STK`);
+      setIsCompleting(false);
       loadProfile();
     } catch (error) {
       toast.error("Erro ao completar mineração");
+      setIsCompleting(false);
     }
   };
 
