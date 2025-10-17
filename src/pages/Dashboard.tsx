@@ -191,10 +191,10 @@ const Dashboard = () => {
               <div>
                 <p className="text-sm text-muted-foreground">Saldo</p>
                 <p className="text-2xl font-bold">
-                  {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(4)} STK
+                  {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(8)} STK
                 </p>
                 {profile?.is_mining && earnedSoFar > 0 && (
-                  <p className="text-xs text-success mt-1">+{earnedSoFar.toFixed(4)} minerando</p>
+                  <p className="text-xs text-success mt-1">+{earnedSoFar.toFixed(8)} minerando</p>
                 )}
               </div>
             </div>
@@ -252,11 +252,11 @@ const Dashboard = () => {
                   <div className="mb-6">
                     <div className="flex justify-between text-sm mb-2">
                       <span className="text-muted-foreground">Progresso</span>
-                      <span className="font-bold text-success">+{earnedSoFar.toFixed(4)} STK</span>
+                      <span className="font-bold text-success">+{earnedSoFar.toFixed(8)} STK</span>
                     </div>
                     <Progress value={currentProgress} className="h-3" />
                     <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                      <span>{currentProgress.toFixed(1)}%</span>
+                      <span>{currentProgress.toFixed(2)}%</span>
                       <span>0.05 STK no total</span>
                     </div>
                   </div>
