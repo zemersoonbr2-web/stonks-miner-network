@@ -21,9 +21,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     loadProfile();
+  }, []);
+
+  useEffect(() => {
+    if (!miningSession) return;
+    
     const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [miningSession]);
 
   const loadProfile = async () => {
     try {
