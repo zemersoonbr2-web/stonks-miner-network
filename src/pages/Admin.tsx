@@ -13,6 +13,8 @@ interface UserStats {
   total_mined: number;
   referral_code: string;
   is_mining: boolean;
+  mining_progress?: number;
+  earning_now?: number;
 }
 
 const Admin = () => {
@@ -22,12 +24,13 @@ const Admin = () => {
   const [totalMined, setTotalMined] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [users, setUsers] = useState<UserStats[]>([]);
+  const [currentlyMining, setCurrentlyMining] = useState(0);
 
   useEffect(() => {
     checkAdminAndLoadData();
     
-    // Setup realtime subscription
-    const channel = supabase
+    // Setup realtime subscription for profiles
+    const profileChannel = supabase
       .channel('admin-profiles-changes')
       .on(
         'postgres_changes',
@@ -42,8 +45,31 @@ const Admin = () => {
       )
       .subscribe();
 
+    // Setup realtime subscription for mining sessions
+    const sessionsChannel = supabase
+      .channel('admin-sessions-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'mining_sessions'
+        },
+        () => {
+          loadAdminData();
+        }
+      )
+      .subscribe();
+
+    // Update mining progress every second
+    const progressInterval = setInterval(() => {
+      updateMiningProgress();
+    }, 1000);
+
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(profileChannel);
+      supabase.removeChannel(sessionsChannel);
+      clearInterval(progressInterval);
     };
   }, []);
 
@@ -80,9 +106,20 @@ const Admin = () => {
     }
   };
 
+  const updateMiningProgress = () => {
+    setUsers(currentUsers => {
+      return currentUsers.map(user => {
+        if (!user.is_mining || !user.mining_progress) return user;
+        
+        // Calcular progresso baseado no tempo (progresso guardado temporariamente)
+        return user;
+      });
+    });
+  };
+
   const loadAdminData = async () => {
     try {
-      // Buscar todos os usuários com saldo em tempo real
+      // Buscar todos os usuários
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select("id, nickname, balance, total_mined, referral_code, is_mining")
@@ -90,17 +127,59 @@ const Admin = () => {
 
       if (profilesError) throw profilesError;
 
-      console.log("Dados carregados:", profiles);
-      setUsers(profiles || []);
+      // Buscar sessões de mineração ativas
+      const { data: sessions, error: sessionsError } = await supabase
+        .from("mining_sessions")
+        .select("*")
+        .eq("completed", false);
+
+      if (sessionsError) throw sessionsError;
+
+      console.log("Profiles:", profiles);
+      console.log("Active sessions:", sessions);
+
+      // Calcular progresso e ganhos para cada usuário
+      const usersWithProgress = profiles?.map(profile => {
+        const session = sessions?.find(s => s.user_id === profile.id);
+        
+        if (session && profile.is_mining) {
+          const now = new Date().getTime();
+          const start = new Date(session.started_at).getTime();
+          const end = new Date(session.ends_at).getTime();
+          const totalDuration = end - start;
+          const elapsed = now - start;
+          
+          const progress = Math.min((elapsed / totalDuration) * 100, 100);
+          const earning = Math.min((elapsed / totalDuration) * 0.05, 0.05);
+          
+          return {
+            ...profile,
+            mining_progress: progress,
+            earning_now: earning
+          };
+        }
+        
+        return profile;
+      }) || [];
+
+      console.log("Users with progress:", usersWithProgress);
+
+      setUsers(usersWithProgress);
       setTotalUsers(profiles?.length || 0);
 
-      // Calcular total minerado somando balance de todos
-      const totalBalance = profiles?.reduce((acc, user) => {
+      // Calcular total: balance + o que está sendo minerado agora
+      const totalBalance = usersWithProgress.reduce((acc, user) => {
         const balance = parseFloat(user.balance?.toString() || "0");
-        return acc + balance;
-      }, 0) || 0;
+        const earning = user.earning_now || 0;
+        return acc + balance + earning;
+      }, 0);
+      
+      const activeMining = usersWithProgress.reduce((acc, user) => {
+        return acc + (user.earning_now || 0);
+      }, 0);
       
       setTotalMined(totalBalance);
+      setCurrentlyMining(activeMining);
 
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
@@ -163,12 +242,17 @@ const Admin = () => {
               </div>
               <div>
                 <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-                  Total Minerado
+                  Total em Circulação
                 </p>
                 <p className="text-3xl font-bold text-gradient-gold text-glow">
                   {totalMined.toFixed(8)}
                 </p>
                 <p className="text-xs text-muted-foreground">STK</p>
+                {currentlyMining > 0 && (
+                  <p className="text-xs text-success text-glow mt-1">
+                    +{currentlyMining.toFixed(8)} sendo minerado agora
+                  </p>
+                )}
               </div>
             </div>
           </Card>
@@ -264,8 +348,13 @@ const Admin = () => {
                       <td className="py-4 px-4 text-right">
                         <div className="flex flex-col items-end">
                           <span className="text-gradient-gold font-bold text-base">
-                            {parseFloat(user.balance?.toString() || "0").toFixed(8)}
+                            {(parseFloat(user.balance?.toString() || "0") + (user.earning_now || 0)).toFixed(8)}
                           </span>
+                          {user.earning_now && user.earning_now > 0 && (
+                            <span className="text-xs text-success text-glow">
+                              +{user.earning_now.toFixed(8)} minerando
+                            </span>
+                          )}
                           <span className="text-xs text-muted-foreground">STK</span>
                         </div>
                       </td>
