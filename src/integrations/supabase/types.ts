@@ -14,16 +14,250 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      mining_sessions: {
+        Row: {
+          ad_watch_verified_at: string | null
+          ad_watched: boolean
+          completed: boolean
+          created_at: string
+          ends_at: string
+          id: string
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          ad_watch_verified_at?: string | null
+          ad_watched?: boolean
+          completed?: boolean
+          created_at?: string
+          ends_at: string
+          id?: string
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          ad_watch_verified_at?: string | null
+          ad_watched?: boolean
+          completed?: boolean
+          created_at?: string
+          ends_at?: string
+          id?: string
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mining_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          account_status: string
+          balance: number
+          created_at: string
+          id: string
+          is_mining: boolean
+          kyc_verified: boolean
+          last_mining_at: string | null
+          nickname: string
+          phone: string
+          referral_code: string
+          referred_by: string | null
+          total_mined: number
+        }
+        Insert: {
+          account_status?: string
+          balance?: number
+          created_at?: string
+          id: string
+          is_mining?: boolean
+          kyc_verified?: boolean
+          last_mining_at?: string | null
+          nickname: string
+          phone: string
+          referral_code: string
+          referred_by?: string | null
+          total_mined?: number
+        }
+        Update: {
+          account_status?: string
+          balance?: number
+          created_at?: string
+          id?: string
+          is_mining?: boolean
+          kyc_verified?: boolean
+          last_mining_at?: string | null
+          nickname?: string
+          phone?: string
+          referral_code?: string
+          referred_by?: string | null
+          total_mined?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_referred_by_fkey"
+            columns: ["referred_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          bonus_paid: boolean
+          created_at: string
+          id: string
+          referred_id: string
+          referrer_id: string
+        }
+        Insert: {
+          bonus_paid?: boolean
+          created_at?: string
+          id?: string
+          referred_id: string
+          referrer_id: string
+        }
+        Update: {
+          bonus_paid?: boolean
+          created_at?: string
+          id?: string
+          referred_id?: string
+          referrer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_referred_id_fkey"
+            columns: ["referred_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reminders: {
+        Row: {
+          id: string
+          receiver_id: string
+          sender_id: string
+          sent_at: string
+        }
+        Insert: {
+          id?: string
+          receiver_id: string
+          sender_id: string
+          sent_at?: string
+        }
+        Update: {
+          id?: string
+          receiver_id?: string
+          sender_id?: string
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminders_receiver_id_fkey"
+            columns: ["receiver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reminders_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_referral_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +384,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const

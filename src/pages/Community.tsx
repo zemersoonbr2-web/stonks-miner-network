@@ -25,7 +25,7 @@ const Community = () => {
 
       setUsers(data || []);
     } catch (error) {
-      console.error("Error loading users:", error);
+      toast.error("Erro ao carregar usuários");
     } finally {
       setLoading(false);
     }

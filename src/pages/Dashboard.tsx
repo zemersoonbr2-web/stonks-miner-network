@@ -52,7 +52,7 @@ const Dashboard = () => {
         }
       }
     } catch (error) {
-      console.error("Error loading profile:", error);
+      navigate("/auth");
     } finally {
       setLoading(false);
     }
@@ -77,72 +77,61 @@ const Dashboard = () => {
   };
 
   const completeMining = async () => {
-    if (!miningSession || !profile) return;
+    if (!miningSession) return;
 
     try {
-      await supabase
-        .from("mining_sessions")
-        .update({ completed: true })
-        .eq("id", miningSession.id);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
 
-      const newBalance = parseFloat(profile.balance) + parseFloat(miningSession.amount);
-      await supabase
-        .from("profiles")
-        .update({ 
-          balance: newBalance,
-          is_mining: false,
-          total_mined: parseFloat(profile.total_mined) + parseFloat(miningSession.amount)
-        })
-        .eq("id", profile.id);
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/complete-mining`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ sessionId: miningSession.id })
+      });
 
-      await supabase
-        .from("transactions")
-        .insert({
-          user_id: profile.id,
-          type: "mining",
-          amount: miningSession.amount,
-          description: "Mineração diária concluída"
-        });
+      const result = await response.json();
 
-      toast.success("Mineração concluída! Tokens adicionados ao seu saldo.");
+      if (!response.ok) {
+        toast.error(result.error || "Erro ao completar mineração");
+        return;
+      }
+
+      toast.success(`Mineração concluída! Você ganhou ${result.reward} STK`);
       loadProfile();
-      setMiningSession(null);
     } catch (error) {
-      console.error("Error completing mining:", error);
       toast.error("Erro ao completar mineração");
     }
   };
 
   const startMining = async () => {
-    if (!profile) return;
-
     try {
-      const now = new Date();
-      const endsAt = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error("Você precisa estar logado");
+        return;
+      }
 
-      const { data: newSession } = await supabase
-        .from("mining_sessions")
-        .insert({
-          user_id: profile.id,
-          ends_at: endsAt.toISOString(),
-          ad_watched: true
-        })
-        .select()
-        .single();
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/start-mining`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json'
+        }
+      });
 
-      await supabase
-        .from("profiles")
-        .update({ 
-          is_mining: true,
-          last_mining_at: now.toISOString()
-        })
-        .eq("id", profile.id);
+      const result = await response.json();
 
-      setMiningSession(newSession);
-      toast.success("Mineração iniciada! Volte em 24 horas.");
+      if (!response.ok) {
+        toast.error(result.error || "Erro ao iniciar mineração");
+        return;
+      }
+
+      toast.success("Mineração iniciada!");
       loadProfile();
     } catch (error) {
-      console.error("Error starting mining:", error);
       toast.error("Erro ao iniciar mineração");
     }
   };

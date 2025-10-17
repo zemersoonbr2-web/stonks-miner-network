@@ -7,6 +7,31 @@ import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Coins } from "lucide-react";
+import { z } from "zod";
+
+const signupSchema = z.object({
+  email: z.string().email("Email inválido").max(255, "Email muito longo"),
+  password: z.string()
+    .min(8, "Senha deve ter no mínimo 8 caracteres")
+    .max(72, "Senha muito longa")
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Senha deve conter letras maiúsculas, minúsculas e números"),
+  nickname: z.string()
+    .trim()
+    .min(3, "Apelido deve ter no mínimo 3 caracteres")
+    .max(20, "Apelido muito longo")
+    .regex(/^[a-zA-Z0-9_-]+$/, "Apelido deve conter apenas letras, números, _ ou -"),
+  phone: z.string()
+    .regex(/^\+?[1-9]\d{1,14}$/, "Formato de telefone inválido (use +55...)"),
+  referralCode: z.string()
+    .regex(/^STK[A-Z0-9]{8}$/, "Código de convite inválido")
+    .optional()
+    .or(z.literal(""))
+});
+
+const loginSchema = z.object({
+  email: z.string().email("Email inválido"),
+  password: z.string().min(1, "Senha obrigatória")
+});
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -26,22 +51,68 @@ const Auth = () => {
 
     try {
       if (isLogin) {
+        // Validate login data
+        const validationResult = loginSchema.safeParse({
+          email: formData.email,
+          password: formData.password
+        });
+
+        if (!validationResult.success) {
+          const firstError = validationResult.error.errors[0];
+          toast.error(firstError.message);
+          setLoading(false);
+          return;
+        }
+
         const { data, error } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.message.includes("Invalid login credentials")) {
+            toast.error("Email ou senha incorretos");
+          } else {
+            toast.error("Erro ao fazer login");
+          }
+          setLoading(false);
+          return;
+        }
         
         if (data.user) {
           toast.success("Login realizado com sucesso!");
           navigate("/dashboard");
         }
       } else {
-        if (!formData.nickname || !formData.phone) {
-          toast.error("Preencha todos os campos");
+        // Validate signup data
+        const validationResult = signupSchema.safeParse({
+          email: formData.email,
+          password: formData.password,
+          nickname: formData.nickname,
+          phone: formData.phone,
+          referralCode: formData.referralCode || ""
+        });
+
+        if (!validationResult.success) {
+          const firstError = validationResult.error.errors[0];
+          toast.error(firstError.message);
           setLoading(false);
           return;
+        }
+
+        // Check if referral code exists (if provided)
+        if (formData.referralCode) {
+          const { data: referrer } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("referral_code", formData.referralCode)
+            .maybeSingle();
+
+          if (!referrer) {
+            toast.error("Código de convite inválido");
+            setLoading(false);
+            return;
+          }
         }
 
         const { data, error } = await supabase.auth.signUp({
@@ -51,42 +122,29 @@ const Auth = () => {
             data: {
               nickname: formData.nickname,
               phone: formData.phone,
+              referralCode: formData.referralCode || null
             },
             emailRedirectTo: `${window.location.origin}/dashboard`
           }
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.message.includes("already registered")) {
+            toast.error("Este email já está cadastrado");
+          } else {
+            toast.error("Erro ao criar conta");
+          }
+          setLoading(false);
+          return;
+        }
 
         if (data.user) {
-          if (formData.referralCode) {
-            const { data: referrer } = await supabase
-              .from("profiles")
-              .select("id")
-              .eq("referral_code", formData.referralCode)
-              .single();
-
-            if (referrer) {
-              await supabase
-                .from("profiles")
-                .update({ referred_by: referrer.id })
-                .eq("id", data.user.id);
-
-              await supabase
-                .from("referrals")
-                .insert({
-                  referrer_id: referrer.id,
-                  referred_id: data.user.id
-                });
-            }
-          }
-
           toast.success("Conta criada! Você já pode fazer login.");
           navigate("/dashboard");
         }
       }
     } catch (error: any) {
-      toast.error(error.message || "Erro ao processar solicitação");
+      toast.error("Erro ao processar solicitação");
     } finally {
       setLoading(false);
     }
