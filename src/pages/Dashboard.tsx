@@ -176,7 +176,7 @@ const Dashboard = () => {
         <header className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold text-primary">
                 Stonks Network
               </h1>
               <p className="text-muted-foreground mt-1">Bem-vindo, {profile?.nickname}!</p>
@@ -187,7 +187,7 @@ const Dashboard = () => {
           </div>
         </header>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+        <div className="grid gap-6 md:grid-cols-3 mb-8">
           <Card className="p-6 bg-gradient-to-br from-card to-accent/20 border-primary/20">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-lg bg-primary/10">
@@ -201,18 +201,6 @@ const Dashboard = () => {
                 {profile?.is_mining && earnedSoFar > 0 && (
                   <p className="text-xs text-success mt-1">+{earnedSoFar.toFixed(8)} minerando</p>
                 )}
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-gradient-to-br from-card to-success/10 border-success/20">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-success/10">
-                <TrendingUp className="h-6 w-6 text-success" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Total Minerado</p>
-                <p className="text-2xl font-bold">{parseFloat(profile?.total_mined || 0).toFixed(4)} STK</p>
               </div>
             </div>
           </Card>
