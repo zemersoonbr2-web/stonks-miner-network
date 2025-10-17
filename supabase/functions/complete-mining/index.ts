@@ -67,15 +67,13 @@ Deno.serve(async (req) => {
     // Calculate reward based on phase
     let reward = 0.05 // Phase 1: 0-10k users
     if (totalUsers && totalUsers >= 10000000) {
-      // Phase 3 complete: No more mining
+      // Mining ended at 10M users
       return new Response(JSON.stringify({ error: 'Mining has ended. Maximum users reached.' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
-    } else if (totalUsers && totalUsers >= 500000) {
-      reward = 0.00625 // Phase 3: 500k-10M users (half of phase 2)
     } else if (totalUsers && totalUsers >= 10000) {
-      reward = 0.0125 // Phase 2: 10k-500k users (quarter of phase 1)
+      reward = 0.0125 // Phase 2 & 3: 10k-10M users (same rate until end)
     }
 
     // Get current profile

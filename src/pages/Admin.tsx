@@ -373,18 +373,18 @@ const Admin = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-gradient-primary">Etapa 3</h3>
-                    <p className="text-xs text-muted-foreground">Lançamento</p>
+                    <p className="text-xs text-muted-foreground">Encerramento</p>
                   </div>
                 </div>
                 
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Meta:</span>
+                    <span className="text-muted-foreground">Meta Final:</span>
                     <span className="font-semibold text-foreground">10.000.000 mineradores</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Taxa:</span>
-                    <span className="font-semibold text-gradient-primary">0.00625 STK/dia</span>
+                    <span className="font-semibold text-gradient-primary">0.0125 STK/dia</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Bônus Ref:</span>
@@ -423,8 +423,8 @@ const Admin = () => {
             
             <div className="mt-6 p-4 rounded-lg bg-muted/30 border border-border/50">
               <p className="text-xs text-muted-foreground">
-                💡 <span className="font-semibold">Observação:</span> O bônus de indicação permanece 10% em todas as etapas. 
-                Após atingir 10 milhões de mineradores, a mineração será encerrada permanentemente.
+                💡 <span className="font-semibold">Observação:</span> O bônus de indicação permanece fixo em 10% em todas as etapas. 
+                A taxa de mineração é 0.05 STK/dia até 10k membros, depois reduz para 0.0125 STK/dia até o encerramento aos 10 milhões de mineradores.
               </p>
             </div>
           </div>
