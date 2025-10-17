@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Coins, Users, Clock, TrendingUp } from "lucide-react";
-import stonksLogo from "@/assets/stonks-coin-logo.jpg";
+import stonksLogo from "@/assets/stonks-coin-logo.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { AdDialog } from "@/components/AdDialog";
@@ -186,7 +186,7 @@ const Dashboard = () => {
         <header className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-primary">
+              <h1 className="text-3xl font-bold text-gradient-primary text-glow">
                 Stonks Network
               </h1>
               <p className="text-muted-foreground mt-1">Bem-vindo, {profile?.nickname}!</p>
@@ -205,11 +205,11 @@ const Dashboard = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Saldo</p>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-bold text-gradient-gold text-shadow-strong">
                   {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(8)} STK
                 </p>
                 {profile?.is_mining && earnedSoFar > 0 && (
-                  <p className="text-xs text-success mt-1">+{earnedSoFar.toFixed(8)} minerando</p>
+                  <p className="text-xs text-success mt-1 text-glow">+{earnedSoFar.toFixed(8)} minerando</p>
                 )}
               </div>
             </div>
@@ -222,7 +222,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Referências</p>
-                <p className="text-2xl font-bold">{referralCount}</p>
+                <p className="text-2xl font-bold text-gradient-primary">{referralCount}</p>
               </div>
             </div>
           </Card>
@@ -234,7 +234,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Status</p>
-                <p className="text-lg font-bold">{profile?.is_mining ? "Minerando" : "Parado"}</p>
+                <p className="text-lg font-bold text-gradient-primary">{profile?.is_mining ? "Minerando" : "Parado"}</p>
               </div>
             </div>
           </Card>
@@ -246,11 +246,11 @@ const Dashboard = () => {
               <div className="inline-flex p-4 rounded-full bg-primary/10 mb-4">
                 <Coins className="h-12 w-12 text-primary" />
               </div>
-              <h2 className="text-2xl font-bold mb-2">Mineração Diária</h2>
+              <h2 className="text-2xl font-bold mb-2 text-gradient-primary text-glow">Mineração Diária</h2>
               {profile?.is_mining ? (
                 <>
                   <p className="text-muted-foreground mb-4">Mineração em andamento</p>
-                  <div className="text-5xl font-bold text-primary mb-4">{timeRemaining}</div>
+                  <div className="text-5xl font-bold text-gradient-gold text-glow mb-4">{timeRemaining}</div>
                   
                   <div className="mb-6">
                     <div className="flex justify-between text-sm mb-2">
@@ -285,9 +285,9 @@ const Dashboard = () => {
           </Card>
 
           <Card className="p-8">
-            <h3 className="text-xl font-bold mb-4">Seu Código de Convite</h3>
+            <h3 className="text-xl font-bold mb-4 text-gradient-primary">Seu Código de Convite</h3>
             <div className="bg-accent/50 rounded-lg p-4 mb-4">
-              <p className="text-center text-2xl font-mono font-bold text-primary">
+              <p className="text-center text-2xl font-mono font-bold text-gradient-gold text-glow">
                 {profile?.referral_code}
               </p>
             </div>
