@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Coins, Users, Clock, TrendingUp } from "lucide-react";
+import stonksLogo from "@/assets/stonks-coin-logo.jpg";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { AdDialog } from "@/components/AdDialog";
@@ -199,8 +200,8 @@ const Dashboard = () => {
         <div className="grid gap-6 md:grid-cols-3 mb-8">
           <Card className="p-6 bg-gradient-to-br from-card to-accent/20 border-primary/20">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-primary/10">
-                <Coins className="h-6 w-6 text-primary" />
+              <div className="w-16 h-16 rounded-full overflow-hidden bg-card shadow-glow flex-shrink-0">
+                <img src={stonksLogo} alt="Stonks Logo" className="w-full h-full object-cover" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Saldo</p>
@@ -214,10 +215,10 @@ const Dashboard = () => {
             </div>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-card to-warning/10 border-warning/20">
+          <Card className="p-6 bg-gradient-to-br from-card to-accent/10 border-accent/30">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded-lg bg-warning/10">
-                <Users className="h-6 w-6 text-warning" />
+              <div className="p-3 rounded-lg bg-gradient-gold">
+                <Users className="h-6 w-6 text-accent-foreground" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Referências</p>
