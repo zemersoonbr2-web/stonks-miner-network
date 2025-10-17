@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
     // Get current profile
     const { data: profile } = await supabaseClient
       .from('profiles')
-      .select('balance, total_mined')
+      .select('balance, total_mined, referred_by')
       .eq('id', user.id)
       .single()
 
@@ -104,6 +104,35 @@ Deno.serve(async (req) => {
         amount: reward,
         description: 'Daily Mining Reward'
       })
+
+    // Pay referral bonus (10% to referrer)
+    if (profile.referred_by) {
+      const referralBonus = reward * 0.1 // 10% of mining reward
+      
+      const { data: referrer } = await supabaseClient
+        .from('profiles')
+        .select('balance')
+        .eq('id', profile.referred_by)
+        .single()
+
+      if (referrer) {
+        const referrerNewBalance = Number(referrer.balance) + referralBonus
+        
+        await supabaseClient
+          .from('profiles')
+          .update({ balance: referrerNewBalance })
+          .eq('id', profile.referred_by)
+
+        await supabaseClient
+          .from('transactions')
+          .insert({
+            user_id: profile.referred_by,
+            type: 'referral',
+            amount: referralBonus,
+            description: `Referral bonus from ${user.user_metadata?.nickname || 'user'}`
+          })
+      }
+    }
 
     return new Response(JSON.stringify({ 
       success: true, 

@@ -17,6 +17,7 @@ const Dashboard = () => {
   const [showAdDialog, setShowAdDialog] = useState(false);
   const [currentProgress, setCurrentProgress] = useState(0);
   const [earnedSoFar, setEarnedSoFar] = useState(0);
+  const [referralCount, setReferralCount] = useState(0);
 
   useEffect(() => {
     loadProfile();
@@ -45,6 +46,14 @@ const Dashboard = () => {
 
       if (profileData) {
         setProfile(profileData);
+        
+        // Count referrals
+        const { count } = await supabase
+          .from("referrals")
+          .select("*", { count: 'exact', head: true })
+          .eq("referrer_id", user.id);
+        
+        setReferralCount(count || 0);
         
         if (profileData.is_mining) {
           const { data: sessionData } = await supabase
@@ -212,7 +221,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Referências</p>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-2xl font-bold">{referralCount}</p>
               </div>
             </div>
           </Card>
