@@ -27,6 +27,7 @@ export const ChatDialog = ({ open, onOpenChange, friendId, friendNickname }: Cha
   const [newMessage, setNewMessage] = useState("");
   const [currentUserId, setCurrentUserId] = useState<string>("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (open) {
@@ -61,9 +62,7 @@ export const ChatDialog = ({ open, onOpenChange, friendId, friendNickname }: Cha
   }, [messages]);
 
   const scrollToBottom = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const getCurrentUser = async () => {
@@ -128,7 +127,7 @@ export const ChatDialog = ({ open, onOpenChange, friendId, friendNickname }: Cha
           <DialogTitle>Chat com {friendNickname}</DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 pr-4" ref={scrollRef}>
+        <ScrollArea className="flex-1 pr-4">
           <div className="space-y-4">
             {messages.length === 0 ? (
               <p className="text-center text-muted-foreground py-8">
@@ -158,6 +157,7 @@ export const ChatDialog = ({ open, onOpenChange, friendId, friendNickname }: Cha
                 </div>
               ))
             )}
+            <div ref={messagesEndRef} />
           </div>
         </ScrollArea>
 
