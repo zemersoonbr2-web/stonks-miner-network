@@ -373,18 +373,21 @@ const Admin = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-gradient-primary">Etapa 3</h3>
-                    <p className="text-xs text-muted-foreground">Encerramento</p>
+                    <p className="text-xs text-muted-foreground">Lançamento Oficial</p>
                   </div>
                 </div>
                 
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Meta Final:</span>
-                    <span className="font-semibold text-foreground">10.000.000 mineradores</span>
+                    <span className="font-semibold text-foreground">1.000.000 mineradores</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Taxa:</span>
-                    <span className="font-semibold text-gradient-primary">0.0125 STK/dia</span>
+                  <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      <span className="font-semibold text-primary">🚀 Lançamento Real:</span> Mineração encerrada. 
+                      Todos os tokens verificados serão distribuídos para as carteiras dos participantes. 
+                      O token será lançado oficialmente no mercado.
+                    </p>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Bônus Ref:</span>
@@ -395,26 +398,26 @@ const Admin = () => {
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-muted-foreground">Progresso</span>
                       <span className="font-semibold text-foreground">
-                        {Math.max(0, totalUsers - 500000).toLocaleString()} / 9.500.000
+                        {Math.max(0, totalUsers - 500000).toLocaleString()} / 500.000
                       </span>
                     </div>
                     <div className="w-full bg-muted/30 rounded-full h-2">
                       <div 
                         className="bg-gradient-primary h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min((Math.max(0, totalUsers - 500000) / 9500000) * 100, 100)}%` }}
+                        style={{ width: `${Math.min((Math.max(0, totalUsers - 500000) / 500000) * 100, 100)}%` }}
                       ></div>
                     </div>
                   </div>
                   
-                  {totalUsers >= 500000 && totalUsers < 10000000 && (
+                  {totalUsers >= 500000 && totalUsers < 1000000 && (
                     <div className="mt-3 p-3 rounded-lg bg-accent/10 border border-accent/30">
                       <p className="text-xs text-accent font-semibold">💥 FASE FINAL</p>
                     </div>
                   )}
                   
-                  {totalUsers >= 10000000 && (
+                  {totalUsers >= 1000000 && (
                     <div className="mt-3 p-3 rounded-lg bg-success/10 border border-success/30">
-                      <p className="text-xs text-success font-semibold">✅ MINERAÇÃO ENCERRADA</p>
+                      <p className="text-xs text-success font-semibold">✅ TOKEN LANÇADO</p>
                     </div>
                   )}
                 </div>
@@ -424,7 +427,8 @@ const Admin = () => {
             <div className="mt-6 p-4 rounded-lg bg-muted/30 border border-border/50">
               <p className="text-xs text-muted-foreground">
                 💡 <span className="font-semibold">Observação:</span> O bônus de indicação permanece fixo em 10% em todas as etapas. 
-                A taxa de mineração é 0.05 STK/dia até 10k membros, depois reduz para 0.0125 STK/dia até o encerramento aos 10 milhões de mineradores.
+                A taxa de mineração é 0.05 STK/dia até 10k membros, depois reduz para 0.0125 STK/dia até o encerramento ao atingir 1 milhão de mineradores, 
+                quando acontecerá o lançamento oficial e distribuição dos tokens.
               </p>
             </div>
           </div>

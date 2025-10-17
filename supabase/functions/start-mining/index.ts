@@ -66,9 +66,9 @@ Deno.serve(async (req) => {
       .from('profiles')
       .select('*', { count: 'exact', head: true })
 
-    if (totalUsers && totalUsers >= 10000000) {
+    if (totalUsers && totalUsers >= 1000000) {
       return new Response(JSON.stringify({ 
-        error: 'Mining has ended. Maximum users reached.',
+        error: 'Mining has ended. Token officially launched.',
         phase: 'completed'
       }), {
         status: 400,
