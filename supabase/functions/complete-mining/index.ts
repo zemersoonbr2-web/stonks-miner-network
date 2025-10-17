@@ -59,8 +59,8 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Calculate reward (0.001 STK per session)
-    const reward = 0.001
+    // Calculate reward (0.05 STK per session)
+    const reward = 0.05
 
     // Get current profile
     const { data: profile } = await supabaseClient

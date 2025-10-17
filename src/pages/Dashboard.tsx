@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { Coins, Users, Clock, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -14,6 +15,8 @@ const Dashboard = () => {
   const [timeRemaining, setTimeRemaining] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [showAdDialog, setShowAdDialog] = useState(false);
+  const [currentProgress, setCurrentProgress] = useState(0);
+  const [earnedSoFar, setEarnedSoFar] = useState(0);
 
   useEffect(() => {
     loadProfile();
@@ -64,17 +67,29 @@ const Dashboard = () => {
     if (!miningSession) return;
     
     const now = new Date().getTime();
+    const start = new Date(miningSession.started_at).getTime();
     const end = new Date(miningSession.ends_at).getTime();
+    const totalDuration = end - start;
+    const elapsed = now - start;
     const diff = end - now;
 
     if (diff <= 0) {
       setTimeRemaining("00:00:00");
+      setCurrentProgress(100);
+      setEarnedSoFar(0.05);
       completeMining();
     } else {
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
       setTimeRemaining(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+      
+      // Calcular progresso e tokens ganhos até agora
+      const progressPercent = (elapsed / totalDuration) * 100;
+      const earned = (elapsed / totalDuration) * 0.05;
+      
+      setCurrentProgress(Math.min(progressPercent, 100));
+      setEarnedSoFar(earned);
     }
   };
 
@@ -175,7 +190,12 @@ const Dashboard = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Saldo</p>
-                <p className="text-2xl font-bold">{parseFloat(profile?.balance || 0).toFixed(4)} STK</p>
+                <p className="text-2xl font-bold">
+                  {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(4)} STK
+                </p>
+                {profile?.is_mining && earnedSoFar > 0 && (
+                  <p className="text-xs text-success mt-1">+{earnedSoFar.toFixed(4)} minerando</p>
+                )}
               </div>
             </div>
           </Card>
@@ -226,11 +246,20 @@ const Dashboard = () => {
               <h2 className="text-2xl font-bold mb-2">Mineração Diária</h2>
               {profile?.is_mining ? (
                 <>
-                  <p className="text-muted-foreground mb-6">Mineração em andamento</p>
-                  <div className="text-5xl font-bold text-primary mb-6">{timeRemaining}</div>
-                  <p className="text-sm text-muted-foreground">
-                    Você receberá {miningSession?.amount || 0.05} STK quando concluir
-                  </p>
+                  <p className="text-muted-foreground mb-4">Mineração em andamento</p>
+                  <div className="text-5xl font-bold text-primary mb-4">{timeRemaining}</div>
+                  
+                  <div className="mb-6">
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-muted-foreground">Progresso</span>
+                      <span className="font-bold text-success">+{earnedSoFar.toFixed(4)} STK</span>
+                    </div>
+                    <Progress value={currentProgress} className="h-3" />
+                    <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                      <span>{currentProgress.toFixed(1)}%</span>
+                      <span>0.05 STK no total</span>
+                    </div>
+                  </div>
                 </>
               ) : (
                 <>
