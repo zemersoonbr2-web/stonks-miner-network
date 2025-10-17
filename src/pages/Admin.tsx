@@ -389,10 +389,6 @@ const Admin = () => {
                       O token será lançado oficialmente no mercado.
                     </p>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Bônus Ref:</span>
-                    <span className="font-semibold text-accent">10%</span>
-                  </div>
                   
                   <div className="mt-4">
                     <div className="flex justify-between text-xs mb-1">
