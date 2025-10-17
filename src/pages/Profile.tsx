@@ -78,16 +78,16 @@ const Profile = () => {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="p-4 rounded-lg bg-background/50">
+              <div className="p-4 rounded-lg bg-card border border-border">
                 <p className="text-sm text-muted-foreground mb-1">Saldo Total</p>
-                <p className="text-2xl font-bold text-primary">
-                  {parseFloat(profile?.balance || 0).toFixed(4)} STK
+                <p className="text-2xl font-bold text-foreground">
+                  {parseFloat(profile?.balance || 0).toFixed(8)} STK
                 </p>
               </div>
-              <div className="p-4 rounded-lg bg-background/50">
-                <p className="text-sm text-muted-foreground mb-1">Total Minerado</p>
-                <p className="text-2xl font-bold text-success">
-                  {parseFloat(profile?.total_mined || 0).toFixed(4)} STK
+              <div className="p-4 rounded-lg bg-card border border-border">
+                <p className="text-sm text-muted-foreground mb-1">Status</p>
+                <p className="text-2xl font-bold text-foreground">
+                  {profile?.is_mining ? "Minerando" : "Parado"}
                 </p>
               </div>
             </div>
