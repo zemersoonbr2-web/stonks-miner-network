@@ -139,7 +139,7 @@ const Admin = () => {
       console.log("Active sessions:", sessions);
 
       // Calcular progresso e ganhos para cada usuário
-      const usersWithProgress = profiles?.map(profile => {
+      const usersWithProgress: UserStats[] = profiles?.map(profile => {
         const session = sessions?.find(s => s.user_id === profile.id);
         
         if (session && profile.is_mining) {
@@ -159,7 +159,11 @@ const Admin = () => {
           };
         }
         
-        return profile;
+        return {
+          ...profile,
+          mining_progress: 0,
+          earning_now: 0
+        };
       }) || [];
 
       console.log("Users with progress:", usersWithProgress);
