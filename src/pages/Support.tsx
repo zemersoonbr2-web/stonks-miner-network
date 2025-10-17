@@ -28,40 +28,17 @@ const Support = () => {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 mb-12">
-          <Card className="p-8 text-center bg-gradient-to-br from-card via-warning/5 to-warning/10 border-warning/30">
-            <div className="inline-flex p-3 rounded-full bg-warning/10 mb-4">
-              <ShoppingBag className="h-10 w-10 text-warning" />
-            </div>
-            <h3 className="text-2xl font-bold mb-3">Shopee</h3>
-            <p className="text-muted-foreground mb-6">
-              Faça suas compras na Shopee através do nosso link afiliado
-            </p>
-            <Button 
-              className="w-full bg-gradient-to-r from-warning to-warning/80 hover:opacity-90"
-              asChild
-            >
-              <a 
-                href="https://shopee.com.br" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                Ir para Shopee
-                <ExternalLink className="ml-2 h-4 w-4" />
-              </a>
-            </Button>
-          </Card>
-
-          <Card className="p-8 text-center bg-gradient-to-br from-card via-destructive/5 to-destructive/10 border-destructive/30">
-            <div className="inline-flex p-3 rounded-full bg-destructive/10 mb-4">
-              <ShoppingBag className="h-10 w-10 text-destructive" />
+        <div className="max-w-md mx-auto mb-12">
+          <Card className="p-8 text-center bg-gradient-to-br from-card via-primary/5 to-primary/10 border-primary/30">
+            <div className="inline-flex p-3 rounded-full bg-primary/10 mb-4">
+              <ShoppingBag className="h-10 w-10 text-primary" />
             </div>
             <h3 className="text-2xl font-bold mb-3">AliExpress</h3>
             <p className="text-muted-foreground mb-6">
               Compre no AliExpress e ajude o projeto a crescer
             </p>
             <Button 
-              className="w-full bg-gradient-to-r from-destructive to-destructive/80 hover:opacity-90"
+              className="w-full bg-gradient-to-r from-primary to-primary-glow hover:opacity-90"
               asChild
             >
               <a 
@@ -81,7 +58,7 @@ const Support = () => {
           <div className="space-y-4 text-muted-foreground">
             <p className="flex items-start gap-3">
               <span className="text-2xl">1.</span>
-              <span>Clique em um dos botões acima para ser redirecionado para Shopee ou AliExpress</span>
+              <span>Clique no botão acima para ser redirecionado para o AliExpress</span>
             </p>
             <p className="flex items-start gap-3">
               <span className="text-2xl">2.</span>

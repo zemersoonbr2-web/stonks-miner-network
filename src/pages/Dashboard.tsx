@@ -7,7 +7,6 @@ import { Coins, Users, Clock, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { AdDialog } from "@/components/AdDialog";
-import stonksLogo from "@/assets/stonks-logo.png";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -174,11 +173,6 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <img src={stonksLogo} alt="Stonks Network" className="h-20 w-auto" />
-        </div>
-        
         <header className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
