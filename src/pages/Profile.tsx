@@ -10,10 +10,33 @@ const Profile = () => {
   const [profile, setProfile] = useState<any>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [miningSession, setMiningSession] = useState<any>(null);
+  const [earnedSoFar, setEarnedSoFar] = useState(0);
 
   useEffect(() => {
     loadProfileData();
   }, []);
+
+  useEffect(() => {
+    if (!miningSession) return;
+    
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const start = new Date(miningSession.started_at).getTime();
+      const end = new Date(miningSession.ends_at).getTime();
+      const totalDuration = end - start;
+      const elapsed = now - start;
+      
+      if (elapsed >= totalDuration) {
+        setEarnedSoFar(0.05);
+      } else {
+        const earned = (elapsed / totalDuration) * 0.05;
+        setEarnedSoFar(earned);
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [miningSession]);
 
   const loadProfileData = async () => {
     try {
@@ -41,6 +64,22 @@ const Profile = () => {
       
       setProfile(profileData);
       setTransactions(transactionsData || []);
+      
+      // Load mining session if active
+      if (profileData?.is_mining) {
+        const { data: sessionData } = await supabase
+          .from("mining_sessions")
+          .select("*")
+          .eq("user_id", user.id)
+          .eq("completed", false)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .single();
+        
+        if (sessionData) {
+          setMiningSession(sessionData);
+        }
+      }
     } catch (error) {
       console.error("Error loading profile:", error);
     } finally {
@@ -84,14 +123,22 @@ const Profile = () => {
               <div className="p-6 rounded-lg bg-primary/10 border-2 border-primary">
                 <p className="text-sm text-foreground/70 mb-2 font-medium">Saldo Total</p>
                 <p className="text-3xl font-bold text-primary">
-                  {parseFloat(profile?.balance || 0).toFixed(8)} STK
+                  {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(8)} STK
                 </p>
+                {profile?.is_mining && earnedSoFar > 0 && (
+                  <p className="text-xs text-success mt-2">+{earnedSoFar.toFixed(8)} STK minerando</p>
+                )}
               </div>
               <div className="p-6 rounded-lg bg-accent/10 border-2 border-accent">
                 <p className="text-sm text-foreground/70 mb-2 font-medium">Status</p>
                 <p className="text-3xl font-bold text-accent-foreground">
                   {profile?.is_mining ? "Minerando" : "Parado"}
                 </p>
+                {profile?.is_mining && (
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Mineração ativa (0.05 STK em 24h)
+                  </p>
+                )}
               </div>
             </div>
 
