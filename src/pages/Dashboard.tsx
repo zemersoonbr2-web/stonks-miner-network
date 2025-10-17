@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Coins, Users, Clock, TrendingUp } from "lucide-react";
+import { Coins, Users, Clock, TrendingUp, Shield } from "lucide-react";
 import stonksLogo from "@/assets/stonks-coin-logo.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -19,6 +19,7 @@ const Dashboard = () => {
   const [currentProgress, setCurrentProgress] = useState(0);
   const [earnedSoFar, setEarnedSoFar] = useState(0);
   const [referralCount, setReferralCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -47,6 +48,16 @@ const Dashboard = () => {
 
       if (profileData) {
         setProfile(profileData);
+        
+        // Check if user is admin
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", user.id)
+          .eq("role", "admin")
+          .maybeSingle();
+        
+        setIsAdmin(!!roleData);
         
         // Count referrals
         const { count } = await supabase
@@ -332,6 +343,16 @@ const Dashboard = () => {
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {isAdmin && (
+            <Button 
+              variant="outline" 
+              className="w-full border-accent/30 hover:bg-accent/10 hover:border-accent/50 transition-all duration-300 py-6 bg-gradient-to-r from-accent/5 to-transparent"
+              onClick={() => navigate("/admin")}
+            >
+              <Shield className="mr-2 h-5 w-5" />
+              Painel Admin
+            </Button>
+          )}
           <Button 
             variant="outline" 
             className="w-full border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 py-6"
