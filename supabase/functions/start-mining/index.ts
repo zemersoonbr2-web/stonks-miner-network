@@ -61,6 +61,21 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Check if mining is still allowed
+    const { count: totalUsers } = await supabaseClient
+      .from('profiles')
+      .select('*', { count: 'exact', head: true })
+
+    if (totalUsers && totalUsers >= 10000000) {
+      return new Response(JSON.stringify({ 
+        error: 'Mining has ended. Maximum users reached.',
+        phase: 'completed'
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
     // Create new mining session - 24 hours
     const now = new Date()
     const endsAt = new Date(now.getTime() + 24 * 60 * 60 * 1000) // 24 hours
