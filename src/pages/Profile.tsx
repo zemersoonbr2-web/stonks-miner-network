@@ -36,6 +36,9 @@ const Profile = () => {
         .order("created_at", { ascending: false })
         .limit(10);
 
+      console.log("Profile data:", profileData);
+      console.log("Balance:", profileData?.balance);
+      
       setProfile(profileData);
       setTransactions(transactionsData || []);
     } catch (error) {
@@ -78,15 +81,15 @@ const Profile = () => {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="p-4 rounded-lg bg-card border border-border">
-                <p className="text-sm text-muted-foreground mb-1">Saldo Total</p>
-                <p className="text-2xl font-bold text-foreground">
+              <div className="p-6 rounded-lg bg-primary/10 border-2 border-primary">
+                <p className="text-sm text-foreground/70 mb-2 font-medium">Saldo Total</p>
+                <p className="text-3xl font-bold text-primary">
                   {parseFloat(profile?.balance || 0).toFixed(8)} STK
                 </p>
               </div>
-              <div className="p-4 rounded-lg bg-card border border-border">
-                <p className="text-sm text-muted-foreground mb-1">Status</p>
-                <p className="text-2xl font-bold text-foreground">
+              <div className="p-6 rounded-lg bg-accent/10 border-2 border-accent">
+                <p className="text-sm text-foreground/70 mb-2 font-medium">Status</p>
+                <p className="text-3xl font-bold text-accent-foreground">
                   {profile?.is_mining ? "Minerando" : "Parado"}
                 </p>
               </div>
