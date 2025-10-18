@@ -395,21 +395,21 @@ const Dashboard = () => {
                 
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Meta:</span>
-                    <span className="font-semibold text-foreground">10.000 mineradores</span>
+                    <span className="text-muted-foreground">{t("target")}:</span>
+                    <span className="font-semibold text-foreground">10.000 {t("miners")}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Taxa:</span>
-                    <span className="font-semibold text-gradient-gold">0.05 STK/dia</span>
+                    <span className="text-muted-foreground">{t("rate")}:</span>
+                    <span className="font-semibold text-gradient-gold">0.05 STK/{t("perDay")}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Bônus Ref:</span>
+                    <span className="text-muted-foreground">{t("refBonus")}:</span>
                     <span className="font-semibold text-accent">10%</span>
                   </div>
                   
                   <div className="mt-4">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">Progresso</span>
+                      <span className="text-muted-foreground">{t("progress")}</span>
                       <span className="font-semibold text-foreground">{totalUsers} / 10.000</span>
                     </div>
                     <div className="w-full bg-muted/30 rounded-full h-2">
@@ -422,7 +422,7 @@ const Dashboard = () => {
                   
                   {totalUsers < 10000 && (
                     <div className="mt-3 p-3 rounded-lg bg-primary/10 border border-primary/30">
-                      <p className="text-xs text-primary font-semibold">🔥 FASE ATIVA</p>
+                      <p className="text-xs text-primary font-semibold">{t("phaseActive")}</p>
                     </div>
                   )}
                 </div>
@@ -439,28 +439,28 @@ const Dashboard = () => {
                     <Target className="h-6 w-6 text-foreground" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gradient-cyber">Etapa 2</h3>
-                    <p className="text-xs text-muted-foreground">Crescimento</p>
+                    <h3 className="text-lg font-bold text-gradient-cyber">{t("stage")} 2</h3>
+                    <p className="text-xs text-muted-foreground">{t("growth")}</p>
                   </div>
                 </div>
                 
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Meta:</span>
-                    <span className="font-semibold text-foreground">500.000 mineradores</span>
+                    <span className="text-muted-foreground">{t("target")}:</span>
+                    <span className="font-semibold text-foreground">500.000 {t("miners")}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Taxa:</span>
-                    <span className="font-semibold text-gradient-cyber">0.0125 STK/dia</span>
+                    <span className="text-muted-foreground">{t("rate")}:</span>
+                    <span className="font-semibold text-gradient-cyber">0.0125 STK/{t("perDay")}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Bônus Ref:</span>
+                    <span className="text-muted-foreground">{t("refBonus")}:</span>
                     <span className="font-semibold text-accent">10%</span>
                   </div>
                   
                   <div className="mt-4">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">Progresso</span>
+                      <span className="text-muted-foreground">{t("progress")}</span>
                       <span className="font-semibold text-foreground">
                         {totalUsers.toLocaleString()} / 500.000
                       </span>
@@ -475,7 +475,7 @@ const Dashboard = () => {
                   
                   {totalUsers >= 10000 && totalUsers < 500000 && (
                     <div className="mt-3 p-3 rounded-lg bg-secondary/10 border border-secondary/30">
-                      <p className="text-xs text-secondary font-semibold">🚀 FASE ATIVA</p>
+                      <p className="text-xs text-secondary font-semibold">{t("rocketPhaseActive")}</p>
                     </div>
                   )}
                 </div>
@@ -492,27 +492,25 @@ const Dashboard = () => {
                     <Trophy className="h-6 w-6 text-foreground" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gradient-primary">Etapa 3</h3>
-                    <p className="text-xs text-muted-foreground">Lançamento Oficial</p>
+                    <h3 className="text-lg font-bold text-gradient-primary">{t("stage")} 3</h3>
+                    <p className="text-xs text-muted-foreground">{t("officialLaunch")}</p>
                   </div>
                 </div>
                 
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Meta Final:</span>
-                    <span className="font-semibold text-foreground">1.000.000 mineradores</span>
+                    <span className="text-muted-foreground">{t("finalTarget")}:</span>
+                    <span className="font-semibold text-foreground">1.000.000 {t("miners")}</span>
                   </div>
                   <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                      <span className="font-semibold text-primary">🚀 Lançamento Real:</span> Mineração encerrada. 
-                      Todos os tokens verificados serão distribuídos para as carteiras dos participantes. 
-                      O token será lançado oficialmente no mercado.
+                      <span className="font-semibold text-primary">{t("realLaunch")}</span> {t("miningEnded")}
                     </p>
                   </div>
                   
                   <div className="mt-4">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">Progresso</span>
+                      <span className="text-muted-foreground">{t("progress")}</span>
                       <span className="font-semibold text-foreground">
                         {totalUsers.toLocaleString()} / 1.000.000
                       </span>
@@ -527,13 +525,13 @@ const Dashboard = () => {
                   
                   {totalUsers >= 500000 && totalUsers < 1000000 && (
                     <div className="mt-3 p-3 rounded-lg bg-accent/10 border border-accent/30">
-                      <p className="text-xs text-accent font-semibold">💥 FASE FINAL</p>
+                      <p className="text-xs text-accent font-semibold">{t("finalPhase")}</p>
                     </div>
                   )}
                   
                   {totalUsers >= 1000000 && (
                     <div className="mt-3 p-3 rounded-lg bg-success/10 border border-success/30">
-                      <p className="text-xs text-success font-semibold">✅ TOKEN LANÇADO</p>
+                      <p className="text-xs text-success font-semibold">{t("tokenLaunched")}</p>
                     </div>
                   )}
                 </div>
@@ -542,9 +540,7 @@ const Dashboard = () => {
             
             <div className="mt-6 p-4 rounded-lg bg-muted/30 border border-border/50">
               <p className="text-xs text-muted-foreground">
-                💡 <span className="font-semibold">Observação:</span> O bônus de indicação permanece fixo em 10% em todas as etapas. 
-                A taxa de mineração é 0.05 STK/dia até 10k membros, depois reduz para 0.0125 STK/dia até o encerramento ao atingir 1 milhão de mineradores, 
-                quando acontecerá o lançamento oficial e distribuição dos tokens.
+                <span className="font-semibold">{t("noteLabel")}</span> {t("noteText")}
               </p>
             </div>
           </div>
@@ -558,7 +554,7 @@ const Dashboard = () => {
               onClick={() => navigate("/admin")}
             >
               <Shield className="mr-2 h-5 w-5" />
-              Painel Admin
+              {t("adminPanel")}
             </Button>
           )}
           <Button 
@@ -567,7 +563,7 @@ const Dashboard = () => {
             onClick={() => navigate("/community")}
           >
             <Users className="mr-2 h-5 w-5" />
-            Comunidade
+            {t("community")}
           </Button>
           <Button 
             variant="outline" 
@@ -575,7 +571,7 @@ const Dashboard = () => {
             onClick={() => navigate("/support")}
           >
             <TrendingUp className="mr-2 h-5 w-5" />
-            Apoie o Projeto
+            {t("supportProject")}
           </Button>
           <Button 
             variant="outline" 
@@ -585,7 +581,7 @@ const Dashboard = () => {
               navigate("/auth");
             }}
           >
-            Sair
+            {t("logout")}
           </Button>
         </div>
       </div>
