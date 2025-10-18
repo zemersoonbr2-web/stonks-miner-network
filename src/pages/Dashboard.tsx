@@ -508,7 +508,7 @@ const Dashboard = () => {
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-muted-foreground">Progresso</span>
                       <span className="font-semibold text-foreground">
-                        {Math.max(0, totalUsers - 500000).toLocaleString()} / 500.000
+                        {totalUsers >= 500000 ? totalUsers.toLocaleString() : '500.000'} / 1.000.000
                       </span>
                     </div>
                     <div className="w-full bg-muted/30 rounded-full h-2">
