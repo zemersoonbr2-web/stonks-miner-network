@@ -60,7 +60,9 @@ const Profile = () => {
         .limit(10);
 
       console.log("Profile data:", profileData);
-      console.log("Balance:", profileData?.balance);
+      console.log("Balance value:", profileData?.balance);
+      console.log("Balance type:", typeof profileData?.balance);
+      console.log("Balance parsed:", parseFloat(String(profileData?.balance || 0)));
       
       setProfile(profileData);
       setTransactions(transactionsData || []);

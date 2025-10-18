@@ -283,6 +283,85 @@ const Dashboard = () => {
           </Card>
         </div>
 
+        {/* Card de Mineração */}
+        <div className="grid gap-6 lg:grid-cols-2 mb-8">
+          <Card className="glass-card p-8 hover-glow border-primary/40 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-hero opacity-10"></div>
+            <div className="text-center relative z-10">
+              <div className="inline-flex p-5 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 mb-6 shadow-glow-strong">
+                <Coins className="h-16 w-16 text-primary" />
+              </div>
+              <h2 className="text-3xl font-bold mb-3 text-gradient-primary text-glow tracking-tight">
+                Mineração 24h
+              </h2>
+              {profile?.is_mining ? (
+                <>
+                  <p className="text-sm text-muted-foreground mb-6 uppercase tracking-wider">Em Progresso</p>
+                  <div className="text-6xl font-bold text-gradient-cyber text-glow mb-6 tracking-tight">
+                    {timeRemaining}
+                  </div>
+                  
+                  <div className="mb-8 bg-card/50 rounded-xl p-4 backdrop-blur-sm border border-primary/20">
+                    <div className="flex justify-between text-sm mb-3">
+                      <span className="text-muted-foreground uppercase tracking-wider text-xs">Progresso</span>
+                      <span className="font-bold text-success text-glow">+{earnedSoFar.toFixed(8)} STK</span>
+                    </div>
+                    <Progress value={currentProgress} className="h-2 mb-3" />
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>{currentProgress.toFixed(2)}%</span>
+                      <span className="text-gradient-gold">Meta: 0.05 STK</span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-muted-foreground mb-8 text-sm">
+                    Assista um anúncio e comece a minerar
+                  </p>
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-gradient-primary hover:shadow-glow-strong transition-all duration-300 text-lg py-6 font-semibold"
+                    onClick={handleStartMining}
+                  >
+                    <Coins className="mr-2 h-5 w-5" />
+                    Iniciar Mineração
+                  </Button>
+                  <p className="text-xs text-muted-foreground mt-4 uppercase tracking-wider">
+                    Recompensa: 0.05 STK
+                  </p>
+                </>
+              )}
+            </div>
+          </Card>
+
+          <Card className="glass-card p-8 hover-glow border-accent/40 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-gold opacity-5"></div>
+            <div className="relative z-10">
+              <h3 className="text-2xl font-bold mb-6 text-gradient-gold text-glow tracking-tight">
+                Código de Convite
+              </h3>
+              <div className="glass-card rounded-xl p-6 mb-6 border-accent/30 shadow-glow">
+                <p className="text-center text-3xl font-mono font-bold text-gradient-cyber text-glow tracking-wider">
+                  {profile?.referral_code}
+                </p>
+              </div>
+              <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                Compartilhe seu código e ganhe <span className="text-gradient-gold font-semibold">10%</span> do que seus indicados mineram!
+              </p>
+              <Button 
+                variant="outline" 
+                className="w-full border-accent/50 hover:bg-accent/10 hover:border-accent transition-all duration-300 py-6 text-lg font-semibold"
+                onClick={() => {
+                  navigator.clipboard.writeText(profile?.referral_code || "");
+                  toast.success("Código copiado!");
+                }}
+              >
+                Copiar Código
+              </Button>
+            </div>
+          </Card>
+        </div>
+
         {/* Etapas da Stonks Network */}
         <Card className="glass-card p-6 mb-8 border-primary/30 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-hero opacity-5"></div>
@@ -377,13 +456,13 @@ const Dashboard = () => {
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-muted-foreground">Progresso</span>
                       <span className="font-semibold text-foreground">
-                        {Math.max(0, totalUsers - 10000).toLocaleString()} / 490.000
+                        {Math.max(0, totalUsers - 10000).toLocaleString()} / 500.000
                       </span>
                     </div>
                     <div className="w-full bg-muted/30 rounded-full h-2">
                       <div 
                         className="bg-gradient-cyber h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min((Math.max(0, totalUsers - 10000) / 490000) * 100, 100)}%` }}
+                        style={{ width: `${Math.min((Math.max(0, totalUsers - 10000) / 500000) * 100, 100)}%` }}
                       ></div>
                     </div>
                   </div>
@@ -464,84 +543,6 @@ const Dashboard = () => {
             </div>
           </div>
         </Card>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Card className="glass-card p-8 hover-glow border-primary/40 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-hero opacity-10"></div>
-            <div className="text-center relative z-10">
-              <div className="inline-flex p-5 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 mb-6 shadow-glow-strong">
-                <Coins className="h-16 w-16 text-primary" />
-              </div>
-              <h2 className="text-3xl font-bold mb-3 text-gradient-primary text-glow tracking-tight">
-                Mineração 24h
-              </h2>
-              {profile?.is_mining ? (
-                <>
-                  <p className="text-sm text-muted-foreground mb-6 uppercase tracking-wider">Em Progresso</p>
-                  <div className="text-6xl font-bold text-gradient-cyber text-glow mb-6 tracking-tight">
-                    {timeRemaining}
-                  </div>
-                  
-                  <div className="mb-8 bg-card/50 rounded-xl p-4 backdrop-blur-sm border border-primary/20">
-                    <div className="flex justify-between text-sm mb-3">
-                      <span className="text-muted-foreground uppercase tracking-wider text-xs">Progresso</span>
-                      <span className="font-bold text-success text-glow">+{earnedSoFar.toFixed(8)} STK</span>
-                    </div>
-                    <Progress value={currentProgress} className="h-2 mb-3" />
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>{currentProgress.toFixed(2)}%</span>
-                      <span className="text-gradient-gold">Meta: 0.05 STK</span>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p className="text-muted-foreground mb-8 text-sm">
-                    Assista um anúncio e comece a minerar
-                  </p>
-                  <Button 
-                    size="lg" 
-                    className="w-full bg-gradient-primary hover:shadow-glow-strong transition-all duration-300 text-lg py-6 font-semibold"
-                    onClick={handleStartMining}
-                  >
-                    <Coins className="mr-2 h-5 w-5" />
-                    Iniciar Mineração
-                  </Button>
-                  <p className="text-xs text-muted-foreground mt-4 uppercase tracking-wider">
-                    Recompensa: 0.05 STK
-                  </p>
-                </>
-              )}
-            </div>
-          </Card>
-
-          <Card className="glass-card p-8 hover-glow border-accent/40 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-gold opacity-5"></div>
-            <div className="relative z-10">
-              <h3 className="text-2xl font-bold mb-6 text-gradient-gold text-glow tracking-tight">
-                Código de Convite
-              </h3>
-              <div className="glass-card rounded-xl p-6 mb-6 border-accent/30 shadow-glow">
-                <p className="text-center text-3xl font-mono font-bold text-gradient-cyber text-glow tracking-wider">
-                  {profile?.referral_code}
-                </p>
-              </div>
-              <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-                Compartilhe seu código e ganhe <span className="text-gradient-gold font-semibold">10%</span> do que seus indicados mineram!
-              </p>
-              <Button 
-                variant="outline" 
-                className="w-full border-accent/50 hover:bg-accent/10 hover:border-accent transition-all duration-300 py-6 text-lg font-semibold"
-                onClick={() => {
-                  navigator.clipboard.writeText(profile?.referral_code || "");
-                  toast.success("Código copiado!");
-                }}
-              >
-                Copiar Código
-              </Button>
-            </div>
-          </Card>
-        </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {isAdmin && (
