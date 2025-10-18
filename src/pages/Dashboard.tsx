@@ -8,9 +8,12 @@ import stonksLogo from "@/assets/stonks-coin-logo.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { AdDialog } from "@/components/AdDialog";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [profile, setProfile] = useState<any>(null);
   const [miningSession, setMiningSession] = useState<any>(null);
   const [timeRemaining, setTimeRemaining] = useState<string>("");
@@ -218,19 +221,22 @@ const Dashboard = () => {
           <div className="flex items-center justify-between mb-4 relative z-10">
             <div>
               <h1 className="text-4xl font-bold text-gradient-primary text-glow tracking-tight">
-                Stonks Network
+                {t("stonksNetwork")}
               </h1>
               <p className="text-muted-foreground mt-2 text-sm uppercase tracking-wider">
-                Bem-vindo, <span className="text-gradient-cyber font-semibold">{profile?.nickname}</span>
+                {t("welcomeUser")}, <span className="text-gradient-cyber font-semibold">{profile?.nickname}</span>
               </p>
             </div>
-            <Button 
-              variant="outline" 
-              onClick={() => navigate("/profile")}
-              className="border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
-            >
-              Perfil
-            </Button>
+            <div className="flex gap-2">
+              <LanguageSelector />
+              <Button 
+                variant="outline" 
+                onClick={() => navigate("/profile")}
+                className="border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
+              >
+                {t("profile")}
+              </Button>
+            </div>
           </div>
         </header>
 
@@ -242,13 +248,13 @@ const Dashboard = () => {
                 <img src={stonksLogo} alt="Stonks Logo" className="w-full h-full object-cover" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Saldo Total</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">{t("totalBalance")}</p>
                 <p className="text-2xl font-bold text-gradient-gold text-glow">
                   {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(8)}
                 </p>
                 <p className="text-xs text-muted-foreground">STK</p>
                 {profile?.is_mining && earnedSoFar > 0 && (
-                  <p className="text-xs text-success mt-1 text-glow">+{earnedSoFar.toFixed(8)} minerando</p>
+                  <p className="text-xs text-success mt-1 text-glow">+{earnedSoFar.toFixed(8)} {t("mining").toLowerCase()}</p>
                 )}
               </div>
             </div>
@@ -261,7 +267,7 @@ const Dashboard = () => {
                 <Users className="h-6 w-6 text-secondary" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Referências</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">{t("references")}</p>
                 <p className="text-3xl font-bold text-gradient-cyber text-glow">{referralCount}</p>
               </div>
             </div>
@@ -274,9 +280,9 @@ const Dashboard = () => {
                 <Clock className="h-6 w-6 text-accent" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Status Mineração</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">{t("miningStatus")}</p>
                 <p className="text-xl font-bold text-gradient-cyber text-glow">
-                  {profile?.is_mining ? "Ativo" : "Inativo"}
+                  {profile?.is_mining ? t("active") : t("inactive")}
                 </p>
               </div>
             </div>
@@ -292,31 +298,31 @@ const Dashboard = () => {
                 <Coins className="h-16 w-16 text-primary" />
               </div>
               <h2 className="text-3xl font-bold mb-3 text-gradient-primary text-glow tracking-tight">
-                Mineração 24h
+                {t("mining24h")}
               </h2>
               {profile?.is_mining ? (
                 <>
-                  <p className="text-sm text-muted-foreground mb-6 uppercase tracking-wider">Em Progresso</p>
+                  <p className="text-sm text-muted-foreground mb-6 uppercase tracking-wider">{t("inProgress")}</p>
                   <div className="text-6xl font-bold text-gradient-cyber text-glow mb-6 tracking-tight">
                     {timeRemaining}
                   </div>
                   
                   <div className="mb-8 bg-card/50 rounded-xl p-4 backdrop-blur-sm border border-primary/20">
                     <div className="flex justify-between text-sm mb-3">
-                      <span className="text-muted-foreground uppercase tracking-wider text-xs">Progresso</span>
+                      <span className="text-muted-foreground uppercase tracking-wider text-xs">{t("progress")}</span>
                       <span className="font-bold text-success text-glow">+{earnedSoFar.toFixed(8)} STK</span>
                     </div>
                     <Progress value={currentProgress} className="h-2 mb-3" />
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span>{currentProgress.toFixed(2)}%</span>
-                      <span className="text-gradient-gold">Meta: 0.05 STK</span>
+                      <span className="text-gradient-gold">{t("goal")}: 0.05 STK</span>
                     </div>
                   </div>
                 </>
               ) : (
                 <>
                   <p className="text-muted-foreground mb-8 text-sm">
-                    Assista um anúncio e comece a minerar
+                    {t("watchAdAndMine")}
                   </p>
                   <Button 
                     size="lg" 
@@ -324,10 +330,10 @@ const Dashboard = () => {
                     onClick={handleStartMining}
                   >
                     <Coins className="mr-2 h-5 w-5" />
-                    Iniciar Mineração
+                    {t("startMining")}
                   </Button>
                   <p className="text-xs text-muted-foreground mt-4 uppercase tracking-wider">
-                    Recompensa: 0.05 STK
+                    {t("reward")}: 0.05 STK
                   </p>
                 </>
               )}
@@ -338,7 +344,7 @@ const Dashboard = () => {
             <div className="absolute inset-0 bg-gradient-gold opacity-5"></div>
             <div className="relative z-10">
               <h3 className="text-2xl font-bold mb-6 text-gradient-gold text-glow tracking-tight">
-                Código de Convite
+                {t("inviteCode")}
               </h3>
               <div className="glass-card rounded-xl p-6 mb-6 border-accent/30 shadow-glow">
                 <p className="text-center text-3xl font-mono font-bold text-gradient-cyber text-glow tracking-wider">
@@ -346,17 +352,17 @@ const Dashboard = () => {
                 </p>
               </div>
               <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-                Compartilhe seu código e ganhe <span className="text-gradient-gold font-semibold">10%</span> do que seus indicados mineram!
+                {t("shareCode")} <span className="text-gradient-gold font-semibold">10%</span> {t("ofWhatRefsMine")}
               </p>
               <Button 
                 variant="outline" 
                 className="w-full border-accent/50 hover:bg-accent/10 hover:border-accent transition-all duration-300 py-6 text-lg font-semibold"
                 onClick={() => {
                   navigator.clipboard.writeText(profile?.referral_code || "");
-                  toast.success("Código copiado!");
+                  toast.success(t("codeCopied"));
                 }}
               >
-                Copiar Código
+                {t("copyCode")}
               </Button>
             </div>
           </Card>
@@ -367,7 +373,7 @@ const Dashboard = () => {
           <div className="absolute inset-0 bg-gradient-hero opacity-5"></div>
           <div className="relative z-10">
             <h2 className="text-2xl font-bold text-gradient-primary text-glow mb-6 tracking-tight">
-              Etapas da Stonks Network
+              {t("stonksStages")}
             </h2>
             
             <div className="grid gap-6 md:grid-cols-3">
@@ -382,8 +388,8 @@ const Dashboard = () => {
                     <Award className="h-6 w-6 text-foreground" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gradient-gold">Etapa 1</h3>
-                    <p className="text-xs text-muted-foreground">Os Pioneiros</p>
+                    <h3 className="text-lg font-bold text-gradient-gold">{t("stage")} 1</h3>
+                    <p className="text-xs text-muted-foreground">{t("pioneers")}</p>
                   </div>
                 </div>
                 

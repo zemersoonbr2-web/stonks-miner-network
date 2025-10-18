@@ -102,6 +102,7 @@ export type Database = {
           id: string
           is_mining: boolean
           kyc_verified: boolean
+          language: string
           last_mining_at: string | null
           nickname: string
           phone: string
@@ -116,6 +117,7 @@ export type Database = {
           id: string
           is_mining?: boolean
           kyc_verified?: boolean
+          language?: string
           last_mining_at?: string | null
           nickname: string
           phone: string
@@ -130,6 +132,7 @@ export type Database = {
           id?: string
           is_mining?: boolean
           kyc_verified?: boolean
+          language?: string
           last_mining_at?: string | null
           nickname?: string
           phone?: string

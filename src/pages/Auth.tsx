@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Coins } from "lucide-react";
 import { z } from "zod";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Language } from "@/lib/i18n/translations";
 
 const signupSchema = z.object({
   email: z.string().email("Email inválido").max(255, "Email muito longo"),
@@ -35,9 +37,11 @@ const loginSchema = z.object({
 
 const Auth = () => {
   const navigate = useNavigate();
+  const { t, setLanguage, language } = useLanguage();
   const [isLogin, setIsLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>("pt");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -149,11 +153,16 @@ const Auth = () => {
             data: {
               nickname: formData.nickname,
               phone: formData.phone,
-              referralCode: formData.referralCode || null
+              referralCode: formData.referralCode || null,
+              language: selectedLanguage
             },
             emailRedirectTo: `${window.location.origin}/dashboard`
           }
         });
+
+        if (data.user) {
+          setLanguage(selectedLanguage);
+        }
 
         if (error) {
           if (error.message.includes("already registered")) {
@@ -166,7 +175,7 @@ const Auth = () => {
         }
 
         if (data.user) {
-          toast.success("Conta criada! Você já pode fazer login.");
+          toast.success(t("accountCreated"));
           navigate("/dashboard");
         }
       }
@@ -185,14 +194,14 @@ const Auth = () => {
             <Coins className="h-12 w-12 text-primary" />
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-            Stonks Network
+            {t("stonksNetwork")}
           </h1>
           <p className="text-muted-foreground mt-2">
             {isForgotPassword 
-              ? "Recuperar senha" 
+              ? t("recoverPassword")
               : isLogin 
-                ? "Entre na sua conta" 
-                : "Crie sua conta"
+                ? t("enterAccount")
+                : t("createAccount")
             }
           </p>
         </div>
@@ -201,7 +210,33 @@ const Auth = () => {
           {!isLogin && !isForgotPassword && (
             <>
               <div>
-                <Label htmlFor="nickname">Apelido</Label>
+                <Label htmlFor="language">{t("selectLanguage")}</Label>
+                <div className="grid grid-cols-3 gap-2 mt-2">
+                  {[
+                    { code: "pt", flag: "🇧🇷", name: "PT" },
+                    { code: "en", flag: "🇺🇸", name: "EN" },
+                    { code: "es", flag: "🇪🇸", name: "ES" },
+                  ].map((lang) => (
+                    <Button
+                      key={lang.code}
+                      type="button"
+                      variant={selectedLanguage === lang.code ? "default" : "outline"}
+                      className={`flex flex-col items-center py-6 ${
+                        selectedLanguage === lang.code 
+                          ? "bg-gradient-primary border-primary" 
+                          : "border-primary/30 hover:border-primary/50"
+                      }`}
+                      onClick={() => setSelectedLanguage(lang.code as Language)}
+                    >
+                      <span className="text-3xl mb-1">{lang.flag}</span>
+                      <span className="text-xs font-semibold">{lang.name}</span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="nickname">{t("nickname")}</Label>
                 <Input
                   id="nickname"
                   type="text"
@@ -212,7 +247,7 @@ const Auth = () => {
               </div>
 
               <div>
-                <Label htmlFor="phone">Telefone</Label>
+                <Label htmlFor="phone">{t("phone")}</Label>
                 <Input
                   id="phone"
                   type="tel"
@@ -226,7 +261,7 @@ const Auth = () => {
           )}
 
           <div>
-            <Label htmlFor="email">E-mail</Label>
+            <Label htmlFor="email">{t("email")}</Label>
             <Input
               id="email"
               type="email"
@@ -238,7 +273,7 @@ const Auth = () => {
 
           {!isForgotPassword && (
             <div>
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password">{t("password")}</Label>
               <Input
                 id="password"
                 type="password"
@@ -251,7 +286,7 @@ const Auth = () => {
 
           {!isLogin && !isForgotPassword && (
             <div>
-              <Label htmlFor="referralCode">Código de Convite (opcional)</Label>
+              <Label htmlFor="referralCode">{t("referralCode")}</Label>
               <Input
                 id="referralCode"
                 type="text"
@@ -268,12 +303,12 @@ const Auth = () => {
             disabled={loading}
           >
             {loading 
-              ? "Processando..." 
+              ? t("processing")
               : isForgotPassword 
-                ? "Enviar Email de Recuperação" 
+                ? t("sendRecoveryEmail")
                 : isLogin 
-                  ? "Entrar" 
-                  : "Criar Conta"
+                  ? t("login")
+                  : t("signup")
             }
           </Button>
         </form>
@@ -285,7 +320,7 @@ const Auth = () => {
               onClick={() => setIsForgotPassword(true)}
               className="text-sm text-primary hover:underline block w-full"
             >
-              Esqueceu a senha?
+              {t("forgotPassword")}
             </button>
           )}
           
@@ -298,10 +333,10 @@ const Auth = () => {
             className="text-sm text-primary hover:underline"
           >
             {isForgotPassword 
-              ? "Voltar ao login" 
+              ? t("backToLogin")
               : isLogin 
-                ? "Não tem conta? Cadastre-se" 
-                : "Já tem conta? Entre"
+                ? t("noAccount")
+                : t("hasAccount")
             }
           </button>
         </div>
