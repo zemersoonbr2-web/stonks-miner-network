@@ -122,7 +122,11 @@ const Profile = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to delete account");
+        const errorData = await response.json();
+        if (response.status === 403) {
+          throw new Error(t("adminCannotDelete"));
+        }
+        throw new Error(errorData.error || "Failed to delete account");
       }
 
       toast({

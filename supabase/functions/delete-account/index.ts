@@ -29,6 +29,24 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Check if user has admin role
+    const { data: userRoles } = await supabaseClient
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id);
+
+    const isAdmin = userRoles?.some(r => r.role === 'admin');
+
+    if (isAdmin) {
+      return new Response(
+        JSON.stringify({ error: 'Admin accounts cannot be deleted' }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     // Use service role client for admin operations
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',

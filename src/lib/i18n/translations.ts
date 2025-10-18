@@ -91,6 +91,7 @@ export const translations = {
     deleteAccountCancel: "Cancelar",
     accountDeleted: "Conta deletada com sucesso",
     accountDeleteError: "Erro ao deletar conta",
+    adminCannotDelete: "Contas de administrador não podem ser deletadas",
     
     // Messages
     loginSuccess: "Login realizado com sucesso!",
@@ -197,6 +198,7 @@ export const translations = {
     deleteAccountCancel: "Cancel",
     accountDeleted: "Account successfully deleted",
     accountDeleteError: "Error deleting account",
+    adminCannotDelete: "Administrator accounts cannot be deleted",
     
     // Messages
     loginSuccess: "Login successful!",
@@ -303,6 +305,7 @@ export const translations = {
     deleteAccountCancel: "Cancelar",
     accountDeleted: "Cuenta eliminada con éxito",
     accountDeleteError: "Error al eliminar cuenta",
+    adminCannotDelete: "Las cuentas de administrador no se pueden eliminar",
     
     // Messages
     loginSuccess: "¡Inicio de sesión exitoso!",
