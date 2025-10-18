@@ -3,15 +3,30 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Coins, TrendingUp, Users, Clock } from "lucide-react";
+import { ArrowLeft, Coins, TrendingUp, Users, Clock, Trash2 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { toast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [profile, setProfile] = useState<any>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [miningSession, setMiningSession] = useState<any>(null);
   const [earnedSoFar, setEarnedSoFar] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     loadProfileData();
@@ -86,6 +101,44 @@ const Profile = () => {
       console.error("Error loading profile:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-account`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete account");
+      }
+
+      toast({
+        title: t("accountDeleted"),
+      });
+
+      await supabase.auth.signOut();
+      navigate("/auth");
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      toast({
+        title: t("accountDeleteError"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -203,30 +256,63 @@ const Profile = () => {
           </Card>
 
           <Card className="p-6 glass-card shadow-glow">
-            <h2 className="text-xl font-bold mb-4 text-gradient-primary">Informações da Conta</h2>
+            <h2 className="text-xl font-bold mb-4 text-gradient-primary">{t("accountInfo")}</h2>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between py-2 border-b border-border">
-                <span className="text-muted-foreground">Telefone</span>
+                <span className="text-muted-foreground">{t("phone")}</span>
                 <span className="font-medium">{profile?.phone}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-border">
-                <span className="text-muted-foreground">KYC Verificado</span>
+                <span className="text-muted-foreground">{t("kycVerified")}</span>
                 <span className={`font-medium ${profile?.kyc_verified ? "text-success" : "text-warning"}`}>
-                  {profile?.kyc_verified ? "Verificado" : "Pendente"}
+                  {profile?.kyc_verified ? t("verified") : t("pending")}
                 </span>
               </div>
               <div className="flex justify-between py-2 border-b border-border">
-                <span className="text-muted-foreground">Status da Conta</span>
+                <span className="text-muted-foreground">{t("accountStatus")}</span>
                 <span className={`font-medium ${profile?.is_blocked ? "text-destructive" : "text-success"}`}>
-                  {profile?.is_blocked ? "Bloqueada" : "Ativa"}
+                  {profile?.is_blocked ? t("blocked") : t("active")}
                 </span>
               </div>
-              <div className="flex justify-between py-2">
-                <span className="text-muted-foreground">Membro desde</span>
+              <div className="flex justify-between py-2 border-b border-border">
+                <span className="text-muted-foreground">{t("memberSince")}</span>
                 <span className="font-medium">
                   {new Date(profile?.created_at).toLocaleDateString("pt-BR")}
                 </span>
               </div>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-border">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button 
+                    variant="destructive" 
+                    className="w-full"
+                    disabled={isDeleting}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    {t("deleteAccount")}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("deleteAccountTitle")}</AlertDialogTitle>
+                    <AlertDialogDescription className="text-base">
+                      {t("deleteAccountWarning")}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("deleteAccountCancel")}</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDeleteAccount}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? t("processing") : t("deleteAccountConfirm")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </Card>
         </div>

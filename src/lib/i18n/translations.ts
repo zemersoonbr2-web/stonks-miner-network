@@ -84,6 +84,13 @@ export const translations = {
     noTransactions: "Nenhuma transação ainda",
     mining: "Minerando",
     stopped: "Parado",
+    deleteAccount: "Deletar Conta",
+    deleteAccountTitle: "Tem certeza?",
+    deleteAccountWarning: "Esta ação é irreversível. Você perderá todos os seus tokens minerados e o acesso à sua conta. As pessoas que você indicou não serão afetadas.",
+    deleteAccountConfirm: "Sim, deletar minha conta",
+    deleteAccountCancel: "Cancelar",
+    accountDeleted: "Conta deletada com sucesso",
+    accountDeleteError: "Erro ao deletar conta",
     
     // Messages
     loginSuccess: "Login realizado com sucesso!",
@@ -183,6 +190,13 @@ export const translations = {
     noTransactions: "No transactions yet",
     mining: "Mining",
     stopped: "Stopped",
+    deleteAccount: "Delete Account",
+    deleteAccountTitle: "Are you sure?",
+    deleteAccountWarning: "This action is irreversible. You will lose all your mined tokens and access to your account. People you referred will not be affected.",
+    deleteAccountConfirm: "Yes, delete my account",
+    deleteAccountCancel: "Cancel",
+    accountDeleted: "Account successfully deleted",
+    accountDeleteError: "Error deleting account",
     
     // Messages
     loginSuccess: "Login successful!",
@@ -282,6 +296,13 @@ export const translations = {
     noTransactions: "No hay transacciones todavía",
     mining: "Minando",
     stopped: "Detenido",
+    deleteAccount: "Eliminar Cuenta",
+    deleteAccountTitle: "¿Estás seguro?",
+    deleteAccountWarning: "Esta acción es irreversible. Perderás todos tus tokens minados y el acceso a tu cuenta. Las personas que referiste no se verán afectadas.",
+    deleteAccountConfirm: "Sí, eliminar mi cuenta",
+    deleteAccountCancel: "Cancelar",
+    accountDeleted: "Cuenta eliminada con éxito",
+    accountDeleteError: "Error al eliminar cuenta",
     
     // Messages
     loginSuccess: "¡Inicio de sesión exitoso!",
