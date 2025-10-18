@@ -456,13 +456,13 @@ const Dashboard = () => {
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-muted-foreground">Progresso</span>
                       <span className="font-semibold text-foreground">
-                        {Math.max(0, totalUsers - 10000).toLocaleString()} / 500.000
+                        {totalUsers.toLocaleString()} / 500.000
                       </span>
                     </div>
                     <div className="w-full bg-muted/30 rounded-full h-2">
                       <div 
                         className="bg-gradient-cyber h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min((Math.max(0, totalUsers - 10000) / 500000) * 100, 100)}%` }}
+                        style={{ width: `${Math.min((totalUsers / 500000) * 100, 100)}%` }}
                       ></div>
                     </div>
                   </div>
@@ -508,13 +508,13 @@ const Dashboard = () => {
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-muted-foreground">Progresso</span>
                       <span className="font-semibold text-foreground">
-                        {totalUsers >= 500000 ? totalUsers.toLocaleString() : '500.000'} / 1.000.000
+                        {totalUsers.toLocaleString()} / 1.000.000
                       </span>
                     </div>
                     <div className="w-full bg-muted/30 rounded-full h-2">
                       <div 
                         className="bg-gradient-primary h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${Math.min((Math.max(0, totalUsers - 500000) / 500000) * 100, 100)}%` }}
+                        style={{ width: `${Math.min((totalUsers / 1000000) * 100, 100)}%` }}
                       ></div>
                     </div>
                   </div>
