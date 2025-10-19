@@ -55,13 +55,17 @@ const Auth = () => {
 
   useEffect(() => {
     // Check if user is coming from password reset email
-    supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsResetPassword(true);
         setIsLogin(false);
         setIsForgotPassword(false);
       }
     });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
