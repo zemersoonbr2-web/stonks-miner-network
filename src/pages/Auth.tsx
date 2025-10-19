@@ -54,7 +54,19 @@ const Auth = () => {
   });
 
   useEffect(() => {
-    // Check if user is coming from password reset email
+    // Check if user is coming from password reset email by checking URL hash
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hashParams.get('access_token');
+    const type = hashParams.get('type');
+
+    if (type === 'recovery' && accessToken) {
+      // User clicked password reset link
+      setIsResetPassword(true);
+      setIsLogin(false);
+      setIsForgotPassword(false);
+    }
+
+    // Also listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsResetPassword(true);
