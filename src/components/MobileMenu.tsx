@@ -32,7 +32,7 @@ export const MobileMenu = ({ isAdmin, nickname }: MobileMenuProps) => {
   const menuItems = [
     { icon: User, label: t("profile"), path: "/profile" },
     { icon: Users, label: t("community"), path: "/community" },
-    { icon: LifeBuoy, label: t("support"), path: "/support" },
+    { icon: LifeBuoy, label: t("supportProject"), path: "/support" },
   ];
 
   if (isAdmin) {
