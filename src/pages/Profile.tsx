@@ -221,18 +221,18 @@ const Profile = () => {
                   >
                     <div className="flex items-center gap-3">
                       {tx.type === "mining" && (
-                        <div className="p-2 rounded-lg bg-gradient-primary">
-                          <img src={stonksLogo} alt="STK" className="h-5 w-5" />
+                        <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center p-1.5">
+                          <img src={stonksLogo} alt="STK" className="w-full h-full object-contain" />
                         </div>
                       )}
                       {tx.type === "referral" && (
-                        <div className="p-2 rounded-lg bg-gradient-gold">
-                          <Users className="h-4 w-4 text-foreground" />
+                        <div className="w-10 h-10 rounded-lg bg-gradient-gold flex items-center justify-center">
+                          <Users className="h-5 w-5 text-foreground" />
                         </div>
                       )}
                       {tx.type === "withdrawal" && (
-                        <div className="p-2 rounded-lg bg-gradient-cyber">
-                          <TrendingUp className="h-4 w-4 text-foreground" />
+                        <div className="w-10 h-10 rounded-lg bg-gradient-cyber flex items-center justify-center">
+                          <TrendingUp className="h-5 w-5 text-foreground" />
                         </div>
                       )}
                       <div>
