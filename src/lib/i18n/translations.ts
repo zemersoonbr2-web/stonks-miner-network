@@ -92,10 +92,6 @@ export const translations = {
     accountDeleted: "Conta deletada com sucesso",
     accountDeleteError: "Erro ao deletar conta",
     adminCannotDelete: "Contas de administrador não podem ser deletadas",
-    miningActive: "Mineração ativa",
-    miningDescription: "Mineração concluída",
-    referralDescription: "Bônus de indicação",
-    withdrawalDescription: "Saque realizado",
     
     // Messages
     loginSuccess: "Login realizado com sucesso!",
@@ -203,10 +199,6 @@ export const translations = {
     accountDeleted: "Account successfully deleted",
     accountDeleteError: "Error deleting account",
     adminCannotDelete: "Administrator accounts cannot be deleted",
-    miningActive: "Active mining",
-    miningDescription: "Mining completed",
-    referralDescription: "Referral bonus",
-    withdrawalDescription: "Withdrawal completed",
     
     // Messages
     loginSuccess: "Login successful!",
@@ -314,10 +306,6 @@ export const translations = {
     accountDeleted: "Cuenta eliminada con éxito",
     accountDeleteError: "Error al eliminar cuenta",
     adminCannotDelete: "Las cuentas de administrador no se pueden eliminar",
-    miningActive: "Minería activa",
-    miningDescription: "Minería completada",
-    referralDescription: "Bono de referido",
-    withdrawalDescription: "Retiro completado",
     
     // Messages
     loginSuccess: "¡Inicio de sesión exitoso!",
