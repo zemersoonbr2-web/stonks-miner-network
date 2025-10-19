@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { AdDialog } from "@/components/AdDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { MobileMenu } from "@/components/MobileMenu";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -216,27 +217,20 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-6xl relative">
-        <header className="mb-8 relative">
-          <div className="absolute inset-0 bg-gradient-primary opacity-5 blur-3xl"></div>
-          <div className="flex items-center justify-between mb-4 relative z-10">
-            <div>
-              <h1 className="text-4xl font-bold text-gradient-primary text-glow tracking-tight">
-                {t("stonksNetwork")}
-              </h1>
-              <p className="text-muted-foreground mt-2 text-sm uppercase tracking-wider">
-                {t("welcomeUser")}, <span className="text-gradient-cyber font-semibold">{profile?.nickname}</span>
-              </p>
+        <header className="mb-8 sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50 -mx-4 px-4 py-4">
+          <div className="flex items-center justify-between">
+            <MobileMenu isAdmin={isAdmin} nickname={profile?.nickname} />
+            
+            <div className="flex-1 text-center">
+              <div className="inline-flex items-center gap-2">
+                <img src={stonksLogo} alt="STK" className="w-6 h-6" />
+                <span className="text-2xl md:text-3xl font-bold text-gradient-gold">
+                  {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(5)} π
+                </span>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <LanguageSelector />
-              <Button 
-                variant="outline" 
-                onClick={() => navigate("/profile")}
-                className="border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
-              >
-                {t("profile")}
-              </Button>
-            </div>
+            
+            <LanguageSelector />
           </div>
         </header>
 
