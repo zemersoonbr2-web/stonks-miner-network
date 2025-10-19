@@ -59,15 +59,17 @@ const Index = () => {
             </div>
           </div>
           
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary-glow/20 blur-3xl rounded-full"></div>
-            <div className="relative bg-card/50 backdrop-blur border border-primary/20 rounded-3xl p-8 shadow-2xl">
-              <img 
-                src={stonksCoinLogo} 
-                alt="Stonks Coin" 
-                className="w-full h-auto animate-float"
-              />
-              <div className="absolute -top-4 -right-4 bg-gradient-to-r from-primary to-primary-glow rounded-full p-4 shadow-lg">
+          <div className="relative flex items-center justify-center">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary-glow/20 blur-3xl"></div>
+            <div className="relative">
+              <div className="w-80 h-80 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-primary/20 shadow-2xl bg-card/50 backdrop-blur animate-float">
+                <img 
+                  src={stonksCoinLogo} 
+                  alt="Stonks Coin" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-primary to-primary-glow rounded-full p-4 shadow-lg">
                 <CheckCircle2 className="h-8 w-8 text-primary-foreground" />
               </div>
             </div>
