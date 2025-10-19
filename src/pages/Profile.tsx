@@ -73,11 +73,6 @@ const Profile = () => {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(10);
-
-      console.log("Profile data:", profileData);
-      console.log("Balance value:", profileData?.balance);
-      console.log("Balance type:", typeof profileData?.balance);
-      console.log("Balance parsed:", parseFloat(String(profileData?.balance || 0)));
       
       setProfile(profileData);
       setTransactions(transactionsData || []);
@@ -98,7 +93,7 @@ const Profile = () => {
         }
       }
     } catch (error) {
-      console.error("Error loading profile:", error);
+      // Error silently handled - user will be redirected by auth guard
     } finally {
       setLoading(false);
     }
@@ -136,7 +131,6 @@ const Profile = () => {
       await supabase.auth.signOut();
       navigate("/auth");
     } catch (error) {
-      console.error("Error deleting account:", error);
       toast({
         title: t("accountDeleteError"),
         variant: "destructive",

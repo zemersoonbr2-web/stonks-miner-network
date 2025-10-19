@@ -48,7 +48,6 @@ const Community = () => {
 
       setFriends(profiles || []);
     } catch (error) {
-      console.error("Erro ao carregar amigos:", error);
       toast.error("Erro ao carregar amigos");
     } finally {
       setLoading(false);

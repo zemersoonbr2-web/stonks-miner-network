@@ -95,7 +95,7 @@ const Dashboard = () => {
         }
       }
     } catch (error) {
-      navigate("/auth");
+      // Error silently handled - user will be redirected by auth guard
     } finally {
       setLoading(false);
     }

@@ -135,10 +135,6 @@ const Admin = () => {
 
       if (sessionsError) throw sessionsError;
 
-      console.log("=== ADMIN DEBUG ===");
-      console.log("Profiles:", profiles);
-      console.log("Active sessions:", sessions);
-
       // Calcular progresso e ganhos para cada usuário
       const now = new Date().getTime();
       const usersWithProgress: UserStats[] = profiles?.map(profile => {
@@ -152,13 +148,6 @@ const Admin = () => {
           
           const progress = Math.min((elapsed / totalDuration) * 100, 100);
           const earning = Math.min((elapsed / totalDuration) * 0.05, 0.05);
-          
-          console.log(`User ${profile.nickname}:`, {
-            elapsed_hours: (elapsed / (1000 * 60 * 60)).toFixed(2),
-            progress: progress.toFixed(2) + '%',
-            earning: earning.toFixed(8),
-            balance: profile.balance
-          });
           
           return {
             ...profile,
@@ -174,8 +163,6 @@ const Admin = () => {
         };
       }) || [];
 
-      console.log("Users with progress:", usersWithProgress);
-
       setUsers(usersWithProgress);
       setTotalUsers(profiles?.length || 0);
 
@@ -190,15 +177,10 @@ const Admin = () => {
         return acc + (user.earning_now || 0);
       }, 0);
       
-      console.log("Total balance (includes mining):", totalBalance.toFixed(8));
-      console.log("Currently being mined:", activeMining.toFixed(8));
-      console.log("=== END DEBUG ===");
-      
       setTotalMined(totalBalance);
       setCurrentlyMining(activeMining);
 
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
       toast.error("Erro ao carregar dados administrativos");
     }
   };

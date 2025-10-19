@@ -26,18 +26,12 @@ const ResetPassword = () => {
     const token = hashParams.get('token') || searchParams.get('token');
     const tokenHash = hashParams.get('token_hash') || searchParams.get('token_hash');
 
-    console.log('Reset Password - URL params:', {
-      hash: window.location.hash,
-      search: window.location.search,
-      accessToken,
-      type,
-      token,
-      tokenHash
-    });
-
     // Check if we have a valid recovery token in any format
     if ((type === 'recovery' || type === 'magiclink') && (accessToken || token || tokenHash)) {
       setIsValidToken(true);
+      
+      // Clear URL immediately to prevent token exposure in browser history
+      window.history.replaceState(null, '', window.location.pathname);
       
       // If we have a token but no session, try to verify it
       if (token && tokenHash && !accessToken) {
@@ -46,14 +40,12 @@ const ResetPassword = () => {
           type: 'recovery'
         }).then(({ error }) => {
           if (error) {
-            console.error('Token verification error:', error);
             toast.error("Link de recuperação inválido ou expirado");
             navigate("/auth");
           }
         });
       }
     } else {
-      console.error('Invalid recovery link - missing required params');
       toast.error("Link de recuperação inválido ou expirado");
       setTimeout(() => navigate("/auth"), 2000);
     }
