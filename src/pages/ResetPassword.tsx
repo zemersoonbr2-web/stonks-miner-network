@@ -17,16 +17,45 @@ const ResetPassword = () => {
   const [isValidToken, setIsValidToken] = useState(false);
 
   useEffect(() => {
-    // Capture token from URL hash
+    // Try to capture token from both hash and query params
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = hashParams.get('access_token');
-    const type = hashParams.get('type');
+    const searchParams = new URLSearchParams(window.location.search);
+    
+    const accessToken = hashParams.get('access_token') || searchParams.get('access_token');
+    const type = hashParams.get('type') || searchParams.get('type');
+    const token = hashParams.get('token') || searchParams.get('token');
+    const tokenHash = hashParams.get('token_hash') || searchParams.get('token_hash');
 
-    if (type === 'recovery' && accessToken) {
+    console.log('Reset Password - URL params:', {
+      hash: window.location.hash,
+      search: window.location.search,
+      accessToken,
+      type,
+      token,
+      tokenHash
+    });
+
+    // Check if we have a valid recovery token in any format
+    if ((type === 'recovery' || type === 'magiclink') && (accessToken || token || tokenHash)) {
       setIsValidToken(true);
+      
+      // If we have a token but no session, try to verify it
+      if (token && tokenHash && !accessToken) {
+        supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type: 'recovery'
+        }).then(({ error }) => {
+          if (error) {
+            console.error('Token verification error:', error);
+            toast.error("Link de recuperação inválido ou expirado");
+            navigate("/auth");
+          }
+        });
+      }
     } else {
+      console.error('Invalid recovery link - missing required params');
       toast.error("Link de recuperação inválido ou expirado");
-      navigate("/auth");
+      setTimeout(() => navigate("/auth"), 2000);
     }
   }, [navigate]);
 
