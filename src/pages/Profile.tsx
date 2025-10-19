@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Coins, TrendingUp, Users, Clock, Trash2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/hooks/use-toast";
+import stonksLogo from "@/assets/stonks-coin-logo.png";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -157,7 +158,7 @@ const Profile = () => {
           className="mb-6 hover-glow"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Voltar
+          {t("backButton")}
         </Button>
 
         <div className="space-y-6">
@@ -174,29 +175,29 @@ const Profile = () => {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="p-6 rounded-lg glass-card shadow-glow">
-                <p className="text-sm text-muted-foreground mb-2 font-medium">Saldo Total</p>
+                <p className="text-sm text-muted-foreground mb-2 font-medium">{t("totalBalance")}</p>
                 <p className="text-3xl font-bold text-gradient-primary">
                   {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(8)} STK
                 </p>
                 {profile?.is_mining && earnedSoFar > 0 && (
-                  <p className="text-xs text-success mt-2">+{earnedSoFar.toFixed(8)} STK minerando</p>
+                  <p className="text-xs text-success mt-2">+{earnedSoFar.toFixed(8)} STK {t("mining").toLowerCase()}</p>
                 )}
               </div>
               <div className="p-6 rounded-lg glass-card shadow-glow">
-                <p className="text-sm text-muted-foreground mb-2 font-medium">Status</p>
+                <p className="text-sm text-muted-foreground mb-2 font-medium">{t("miningStatus")}</p>
                 <p className="text-3xl font-bold text-gradient-cyber">
-                  {profile?.is_mining ? "Minerando" : "Parado"}
+                  {profile?.is_mining ? t("mining") : t("stopped")}
                 </p>
                 {profile?.is_mining && (
                   <p className="text-xs text-muted-foreground mt-2">
-                    Mineração ativa (0.05 STK em 24h)
+                    {t("miningActive")} (0.05 STK {t("mining24h")})
                   </p>
                 )}
               </div>
             </div>
 
             <div className="mt-6 p-4 rounded-lg glass-card border border-primary/30">
-              <p className="text-sm text-muted-foreground mb-2">Código de Convite</p>
+              <p className="text-sm text-muted-foreground mb-2">{t("inviteCode")}</p>
               <p className="text-xl font-mono font-bold text-gradient-gold">{profile?.referral_code}</p>
             </div>
           </Card>
@@ -204,13 +205,13 @@ const Profile = () => {
           <Card className="p-6 glass-card shadow-glow">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-gradient-primary">
               <Clock className="h-5 w-5" />
-              Histórico de Transações
+              {t("transactionHistory")}
             </h2>
 
             <div className="space-y-3">
               {transactions.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">
-                  Nenhuma transação ainda
+                  {t("noTransactions")}
                 </p>
               ) : (
                 transactions.map((tx) => (
@@ -221,7 +222,7 @@ const Profile = () => {
                     <div className="flex items-center gap-3">
                       {tx.type === "mining" && (
                         <div className="p-2 rounded-lg bg-gradient-primary">
-                          <Coins className="h-4 w-4 text-foreground" />
+                          <img src={stonksLogo} alt="STK" className="h-5 w-5" />
                         </div>
                       )}
                       {tx.type === "referral" && (
@@ -237,7 +238,7 @@ const Profile = () => {
                       <div>
                         <p className="font-medium">{tx.description}</p>
                         <p className="text-xs text-muted-foreground">
-                          {new Date(tx.created_at).toLocaleString("pt-BR")}
+                          {new Date(tx.created_at).toLocaleString()}
                         </p>
                       </div>
                     </div>
