@@ -225,7 +225,7 @@ const Dashboard = () => {
               <div className="inline-flex items-center gap-2">
                 <img src={stonksLogo} alt="STK" className="w-6 h-6" />
                 <span className="text-2xl md:text-3xl font-bold text-gradient-gold">
-                  {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(5)} π
+                  {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(5)}
                 </span>
               </div>
             </div>
@@ -540,44 +540,6 @@ const Dashboard = () => {
           </div>
         </Card>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {isAdmin && (
-            <Button 
-              variant="outline" 
-              className="w-full border-accent/30 hover:bg-accent/10 hover:border-accent/50 transition-all duration-300 py-6 bg-gradient-to-r from-accent/5 to-transparent"
-              onClick={() => navigate("/admin")}
-            >
-              <Shield className="mr-2 h-5 w-5" />
-              {t("adminPanel")}
-            </Button>
-          )}
-          <Button 
-            variant="outline" 
-            className="w-full border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 py-6"
-            onClick={() => navigate("/community")}
-          >
-            <Users className="mr-2 h-5 w-5" />
-            {t("community")}
-          </Button>
-          <Button 
-            variant="outline" 
-            className="w-full border-secondary/30 hover:bg-secondary/10 hover:border-secondary/50 transition-all duration-300 py-6"
-            onClick={() => navigate("/support")}
-          >
-            <TrendingUp className="mr-2 h-5 w-5" />
-            {t("supportProject")}
-          </Button>
-          <Button 
-            variant="outline" 
-            className="w-full border-destructive/30 hover:bg-destructive/10 hover:border-destructive/50 transition-all duration-300 py-6"
-            onClick={async () => {
-              await supabase.auth.signOut();
-              navigate("/auth");
-            }}
-          >
-            {t("logout")}
-          </Button>
-        </div>
       </div>
 
       <AdDialog 
