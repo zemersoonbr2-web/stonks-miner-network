@@ -3,8 +3,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Coins, Users, TrendingUp, ArrowLeft, RefreshCw, Award, Target, Trophy } from "lucide-react";
+import { Coins, Users, TrendingUp, ArrowLeft, RefreshCw, Award, Target, Trophy, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface UserStats {
   id: string;
@@ -25,6 +35,8 @@ const Admin = () => {
   const [totalUsers, setTotalUsers] = useState(0);
   const [users, setUsers] = useState<UserStats[]>([]);
   const [currentlyMining, setCurrentlyMining] = useState(0);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<{ id: string; nickname: string } | null>(null);
 
   useEffect(() => {
     checkAdminAndLoadData();
@@ -185,6 +197,42 @@ const Admin = () => {
     }
   };
 
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast.error("Sessão expirada");
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke('delete-account', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: { user_id: userToDelete.id }
+      });
+
+      if (error) throw error;
+
+      toast.success(`Conta de ${userToDelete.nickname} excluída com sucesso`);
+      await loadAdminData();
+    } catch (error: any) {
+      console.error('Erro ao excluir conta:', error);
+      toast.error(error.message || "Erro ao excluir conta");
+    } finally {
+      setDeleteDialogOpen(false);
+      setUserToDelete(null);
+    }
+  };
+
+  const openDeleteDialog = (user: UserStats) => {
+    setUserToDelete({ id: user.id, nickname: user.nickname });
+    setDeleteDialogOpen(true);
+  };
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
@@ -320,6 +368,9 @@ const Admin = () => {
                     <th className="text-center py-4 px-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">
                       Status
                     </th>
+                    <th className="text-center py-4 px-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                      Ações
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -388,6 +439,16 @@ const Admin = () => {
                           {user.is_mining ? "Minerando" : "Parado"}
                         </span>
                       </td>
+                      <td className="py-4 px-4 text-center">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openDeleteDialog(user)}
+                          className="hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -402,6 +463,28 @@ const Admin = () => {
           </div>
         </Card>
       </div>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir conta</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir a conta de <strong>{userToDelete?.nickname}</strong>? 
+              Esta ação é permanente e irá remover todos os dados do usuário, incluindo saldo, 
+              transações e histórico de mineração.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteUser}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

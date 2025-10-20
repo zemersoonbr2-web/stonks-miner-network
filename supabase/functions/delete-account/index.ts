@@ -29,15 +29,38 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Check if user has admin role
-    const { data: userRoles } = await supabaseClient
+    // Check if the request has a user_id in the body (admin deleting another user)
+    const body = await req.json().catch(() => ({}));
+    const targetUserId = body.user_id || user.id;
+
+    // Check if the current user has admin role
+    const { data: currentUserRoles } = await supabaseClient
       .from('user_roles')
       .select('role')
       .eq('user_id', user.id);
 
-    const isAdmin = userRoles?.some(r => r.role === 'admin');
+    const isCurrentUserAdmin = currentUserRoles?.some(r => r.role === 'admin');
 
-    if (isAdmin) {
+    // If trying to delete another user, must be admin
+    if (targetUserId !== user.id && !isCurrentUserAdmin) {
+      return new Response(
+        JSON.stringify({ error: 'Only admins can delete other users' }),
+        {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Check if target user is an admin
+    const { data: targetUserRoles } = await supabaseClient
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', targetUserId);
+
+    const isTargetUserAdmin = targetUserRoles?.some(r => r.role === 'admin');
+
+    if (isTargetUserAdmin && targetUserId === user.id) {
       return new Response(
         JSON.stringify({ error: 'Admin accounts cannot be deleted' }),
         {
@@ -58,25 +81,25 @@ Deno.serve(async (req) => {
     await supabaseAdmin
       .from('chat_messages')
       .delete()
-      .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`);
+      .or(`sender_id.eq.${targetUserId},receiver_id.eq.${targetUserId}`);
 
     // 2. Delete reminders
     await supabaseAdmin
       .from('reminders')
       .delete()
-      .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`);
+      .or(`sender_id.eq.${targetUserId},receiver_id.eq.${targetUserId}`);
 
     // 3. Delete mining sessions
     await supabaseAdmin
       .from('mining_sessions')
       .delete()
-      .eq('user_id', user.id);
+      .eq('user_id', targetUserId);
 
     // 4. Delete transactions
     await supabaseAdmin
       .from('transactions')
       .delete()
-      .eq('user_id', user.id);
+      .eq('user_id', targetUserId);
 
     // 5. Update referrals to remove references (keep the referral records but nullify the deleted user)
     // Update referrals where this user was the referrer - set referrer_id to null or handle as needed
@@ -84,7 +107,7 @@ Deno.serve(async (req) => {
     await supabaseAdmin
       .from('referrals')
       .delete()
-      .eq('referred_id', user.id);
+      .eq('referred_id', targetUserId);
 
     // Keep referrals where this user was the referrer - those people keep their bonuses
     // No action needed for referrer_id matches
@@ -93,17 +116,17 @@ Deno.serve(async (req) => {
     await supabaseAdmin
       .from('user_roles')
       .delete()
-      .eq('user_id', user.id);
+      .eq('user_id', targetUserId);
 
     // 7. Delete profile
     await supabaseAdmin
       .from('profiles')
       .delete()
-      .eq('id', user.id);
+      .eq('id', targetUserId);
 
     // 8. Finally, delete the auth user
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(
-      user.id
+      targetUserId
     );
 
     if (deleteError) {
