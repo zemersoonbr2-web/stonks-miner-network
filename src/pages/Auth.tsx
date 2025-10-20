@@ -280,7 +280,10 @@ const Auth = () => {
                           ? "bg-gradient-primary border-primary" 
                           : "border-primary/30 hover:border-primary/50"
                       }`}
-                      onClick={() => setSelectedLanguage(lang.code as Language)}
+                      onClick={() => {
+                        setSelectedLanguage(lang.code as Language);
+                        setLanguage(lang.code as Language);
+                      }}
                     >
                       <span className="text-3xl mb-1">{lang.flag}</span>
                       <span className="text-xs font-semibold">{lang.name}</span>
