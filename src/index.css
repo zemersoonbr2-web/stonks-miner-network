@@ -168,6 +168,15 @@ All colors MUST be HSL.
     -moz-user-select: none;
     -ms-user-select: none;
   }
+
+  /* Prevent image dragging */
+  img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
 }
 
 @layer utilities {
