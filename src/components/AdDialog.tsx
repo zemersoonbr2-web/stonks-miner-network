@@ -82,17 +82,23 @@ export const AdDialog = ({ open, onAdCompleted, onClose }: AdDialogProps) => {
               <p className="text-sm text-muted-foreground">Carregando anúncio...</p>
             </div>
           ) : (
-            <div className="w-full">
+            <div className="w-full space-y-4">
               {/* Ad Container */}
-              <div className="mb-4 min-h-[250px] relative flex flex-col items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg overflow-hidden border border-primary/20">
-                {/* Simulated Ad Content for Testing */}
-                <div className="w-full h-[250px] flex flex-col items-center justify-center p-6 text-center">
-                  <div className="space-y-3">
-                    <div className="text-4xl">🎬</div>
-                    <p className="text-lg font-semibold text-foreground">Anúncio em Vídeo</p>
-                    <p className="text-sm text-muted-foreground max-w-xs">
-                      Este é um anúncio simulado. Após publicar, anúncios reais do Google AdSense aparecerão aqui.
-                    </p>
+              <div className="min-h-[250px] flex flex-col items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg overflow-hidden border border-primary/20 p-6">
+                {/* Simulated Ad Content */}
+                <div className="w-full h-[250px] flex flex-col items-center justify-center text-center">
+                  <div className="space-y-4">
+                    <div className="text-5xl animate-pulse">🎬</div>
+                    <div>
+                      <p className="text-xl font-bold text-foreground mb-2">Anúncio em Vídeo</p>
+                      <p className="text-sm text-muted-foreground max-w-sm">
+                        Este é um anúncio simulado para teste. Após publicar, anúncios reais do Google AdSense aparecerão aqui.
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                      <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                      <span>Reproduzindo anúncio...</span>
+                    </div>
                   </div>
                 </div>
 
@@ -105,20 +111,24 @@ export const AdDialog = ({ open, onAdCompleted, onClose }: AdDialogProps) => {
                   data-ad-format="auto"
                   data-full-width-responsive="true"
                 ></ins>
-                
-                {!canSkip && (
-                  <div className="absolute inset-0 bg-background/90 backdrop-blur-sm flex items-center justify-center z-10">
-                    <div className="text-center space-y-2">
-                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 text-primary text-2xl font-bold animate-pulse">
-                        {countdown}
-                      </div>
-                      <p className="text-sm text-muted-foreground font-medium">
-                        segundos restantes
+              </div>
+
+              {/* Countdown Timer */}
+              {!canSkip && (
+                <div className="bg-muted/50 rounded-lg p-4 border border-border">
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/20 text-primary text-xl font-bold animate-pulse">
+                      {countdown}
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-foreground">Aguarde para continuar</p>
+                      <p className="text-xs text-muted-foreground">
+                        {countdown} segundos restantes
                       </p>
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
               <Button
                 className="w-full bg-gradient-to-r from-primary to-primary-glow"
