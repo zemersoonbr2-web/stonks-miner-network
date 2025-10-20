@@ -2,9 +2,21 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Coins, Users, TrendingUp, Shield, Zap, Globe, ArrowRight, CheckCircle2 } from "lucide-react";
 import stonksCoinLogo from "@/assets/stonks-coin-logo.png";
+import { useEffect } from "react";
 
 const Index = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if there's a referral code in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    
+    if (refCode) {
+      // Redirect to auth page with the referral code
+      navigate(`/auth?ref=${refCode}`);
+    }
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-primary/10">
