@@ -163,7 +163,7 @@ const Dashboard = () => {
         return;
       }
 
-      toast.success(`Mineração concluída! Você ganhou ${result.reward} STK`);
+      toast.success(`Mineração concluída! Você ganhou ${result.reward} STKN`);
       setIsCompleting(false);
       loadProfile();
     } catch (error) {
@@ -223,7 +223,7 @@ const Dashboard = () => {
             
             <div className="flex-1 text-center">
               <div className="inline-flex items-center gap-2">
-                <img src={stonksLogo} alt="STK" className="w-6 h-6" />
+                <img src={stonksLogo} alt="STKN" className="w-6 h-6" />
                 <span className="text-2xl md:text-3xl font-bold text-gradient-gold">
                   {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(5)}
                 </span>
@@ -246,7 +246,7 @@ const Dashboard = () => {
                 <p className="text-2xl font-bold text-gradient-gold text-glow">
                   {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(8)}
                 </p>
-                <p className="text-xs text-muted-foreground">STK</p>
+                <p className="text-xs text-muted-foreground">STKN</p>
                 {profile?.is_mining && earnedSoFar > 0 && (
                   <p className="text-xs text-success mt-1 text-glow">+{earnedSoFar.toFixed(8)} {t("mining").toLowerCase()}</p>
                 )}
@@ -304,12 +304,12 @@ const Dashboard = () => {
                   <div className="mb-8 bg-card/50 rounded-xl p-4 backdrop-blur-sm border border-primary/20">
                     <div className="flex justify-between text-sm mb-3">
                       <span className="text-muted-foreground uppercase tracking-wider text-xs">{t("progress")}</span>
-                      <span className="font-bold text-success text-glow">+{earnedSoFar.toFixed(8)} STK</span>
+                      <span className="font-bold text-success text-glow">+{earnedSoFar.toFixed(8)} STKN</span>
                     </div>
                     <Progress value={currentProgress} className="h-2 mb-3" />
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span>{currentProgress.toFixed(2)}%</span>
-                      <span className="text-gradient-gold">{t("goal")}: 0.05 STK</span>
+                      <span className="text-gradient-gold">{t("goal")}: 0.05 STKN</span>
                     </div>
                   </div>
                 </>
@@ -327,7 +327,7 @@ const Dashboard = () => {
                     {t("startMining")}
                   </Button>
                   <p className="text-xs text-muted-foreground mt-4 uppercase tracking-wider">
-                    {t("reward")}: 0.05 STK
+                    {t("reward")}: 0.05 STKN
                   </p>
                 </>
               )}
@@ -431,7 +431,7 @@ const Dashboard = () => {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">{t("rate")}:</span>
-                    <span className="font-semibold text-gradient-gold">0.05 STK/{t("perDay")}</span>
+                    <span className="font-semibold text-gradient-gold">0.05 STKN/{t("perDay")}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">{t("refBonus")}:</span>
@@ -482,7 +482,7 @@ const Dashboard = () => {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">{t("rate")}:</span>
-                    <span className="font-semibold text-gradient-cyber">0.0125 STK/{t("perDay")}</span>
+                    <span className="font-semibold text-gradient-cyber">0.0125 STKN/{t("perDay")}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">{t("refBonus")}:</span>

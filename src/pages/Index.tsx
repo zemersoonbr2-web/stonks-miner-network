@@ -66,7 +66,7 @@ const Index = () => {
               <div className="w-px h-12 bg-border"></div>
               <div>
                 <div className="text-2xl font-bold text-primary">1M+</div>
-                <div className="text-sm text-muted-foreground">STK Minerados</div>
+                <div className="text-sm text-muted-foreground">STKN Minerados</div>
               </div>
             </div>
           </div>
@@ -154,7 +154,7 @@ const Index = () => {
               </div>
               <h3 className="text-xl font-bold mb-2">Tokens Valiosos</h3>
               <p className="text-muted-foreground leading-relaxed">
-                STK é uma moeda digital com potencial de crescimento baseada no engajamento da comunidade.
+                STKN é uma moeda digital com potencial de crescimento baseada no engajamento da comunidade.
               </p>
             </div>
           </div>
@@ -164,7 +164,7 @@ const Index = () => {
         <div className="text-center bg-gradient-to-br from-card/80 to-card/40 backdrop-blur border border-primary/20 rounded-3xl p-12 shadow-2xl">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Pronto para começar sua jornada?</h2>
           <p className="text-muted-foreground mb-8 text-lg max-w-2xl mx-auto">
-            Junte-se a milhares de usuários que já estão minerando STK e construindo seu patrimônio digital
+            Junte-se a milhares de usuários que já estão minerando STKN e construindo seu patrimônio digital
           </p>
           <Button 
             size="lg" 

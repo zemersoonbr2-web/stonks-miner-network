@@ -155,7 +155,7 @@ const Leaderboard = () => {
               </div>
               <div className="text-right">
                 <div className="flex items-center gap-2 justify-end">
-                  <img src={stonksLogo} alt="STK" className="w-5 h-5" />
+                  <img src={stonksLogo} alt="STKN" className="w-5 h-5" />
                   <p className="text-xl font-bold text-gradient-gold">
                     {userRank.total_mined.toFixed(4)}
                   </p>
@@ -184,13 +184,13 @@ const Leaderboard = () => {
                       <span className="text-lg font-bold">{miner.nickname}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span>Saldo: {miner.balance.toFixed(4)} STK</span>
+                      <span>Saldo: {miner.balance.toFixed(4)} STKN</span>
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="flex items-center gap-2 justify-end">
-                    <img src={stonksLogo} alt="STK" className="w-5 h-5" />
+                    <img src={stonksLogo} alt="STKN" className="w-5 h-5" />
                     <p className="text-xl font-bold text-gradient-gold">
                       {miner.total_mined.toFixed(4)}
                     </p>

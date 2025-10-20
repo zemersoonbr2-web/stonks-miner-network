@@ -176,10 +176,10 @@ const Profile = () => {
               <div className="p-6 rounded-lg glass-card shadow-glow">
                 <p className="text-sm text-muted-foreground mb-2 font-medium">Saldo Total</p>
                 <p className="text-3xl font-bold text-gradient-primary">
-                  {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(8)} STK
+                  {(parseFloat(profile?.balance || 0) + earnedSoFar).toFixed(8)} STKN
                 </p>
                 {profile?.is_mining && earnedSoFar > 0 && (
-                  <p className="text-xs text-success mt-2">+{earnedSoFar.toFixed(8)} STK minerando</p>
+                  <p className="text-xs text-success mt-2">+{earnedSoFar.toFixed(8)} STKN minerando</p>
                 )}
               </div>
               <div className="p-6 rounded-lg glass-card shadow-glow">
@@ -189,7 +189,7 @@ const Profile = () => {
                 </p>
                 {profile?.is_mining && (
                   <p className="text-xs text-muted-foreground mt-2">
-                    Mineração ativa (0.05 STK em 24h)
+                    Mineração ativa (0.05 STKN em 24h)
                   </p>
                 )}
               </div>
@@ -245,7 +245,7 @@ const Profile = () => {
                       parseFloat(tx.amount) > 0 ? "text-success" : "text-destructive"
                     }`}>
                       {parseFloat(tx.amount) > 0 ? "+" : ""}
-                      {parseFloat(tx.amount).toFixed(4)} STK
+                      {parseFloat(tx.amount).toFixed(4)} STKN
                     </p>
                   </div>
                 ))

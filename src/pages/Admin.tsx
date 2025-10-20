@@ -295,7 +295,7 @@ const Admin = () => {
                 <p className="text-3xl font-bold text-gradient-gold text-glow">
                   {totalMined.toFixed(8)}
                 </p>
-                <p className="text-xs text-muted-foreground">STK</p>
+                <p className="text-xs text-muted-foreground">STKN</p>
                 {currentlyMining > 0 && (
                   <p className="text-xs text-success text-glow mt-1">
                     +{currentlyMining.toFixed(8)} sendo minerado agora
@@ -362,10 +362,10 @@ const Admin = () => {
                       Código
                     </th>
                     <th className="text-left py-4 px-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">
-                      Saldo Atual (STK)
+                      Saldo Atual (STKN)
                     </th>
                     <th className="text-right py-4 px-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">
-                      Total Minerado (STK)
+                      Total Minerado (STKN)
                     </th>
                     <th className="text-center py-4 px-4 text-xs uppercase tracking-wider text-muted-foreground font-medium">
                       Status
@@ -404,7 +404,7 @@ const Admin = () => {
                             <span className="text-gradient-gold font-bold text-lg">
                               {(parseFloat(user.balance?.toString() || "0") + (user.earning_now || 0)).toFixed(8)}
                             </span>
-                            <span className="text-xs text-muted-foreground">STK</span>
+                            <span className="text-xs text-muted-foreground">STKN</span>
                           </div>
                           {user.earning_now && user.earning_now > 0 && (
                             <div className="flex items-center gap-1 mt-1">
@@ -429,7 +429,7 @@ const Admin = () => {
                           <span className="text-gradient-cyber font-semibold text-base">
                             {parseFloat(user.total_mined?.toString() || "0").toFixed(8)}
                           </span>
-                          <span className="text-xs text-muted-foreground">STK</span>
+                          <span className="text-xs text-muted-foreground">STKN</span>
                         </div>
                       </td>
                       <td className="py-4 px-4 text-center">
