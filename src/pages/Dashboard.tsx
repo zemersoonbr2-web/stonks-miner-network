@@ -361,49 +361,38 @@ const Dashboard = () => {
                   {t("copyCode")}
                 </Button>
                 
-                <div className="grid grid-cols-3 gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex flex-col items-center gap-1 h-auto py-3 border-green-500/50 hover:bg-green-500/10"
-                    onClick={() => {
-                      const message = "Venha fazer parte da Stonks Network, e já comece ganhando 0,5 STKN utilizando o meu código: " + profile?.referral_code;
-                      const whatsappUrl = `https://web.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-                      window.open(whatsappUrl, '_blank');
-                    }}
-                  >
-                    <MessageCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-xs">WhatsApp</span>
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex flex-col items-center gap-1 h-auto py-3 border-blue-500/50 hover:bg-blue-500/10"
-                    onClick={() => {
-                      const message = "Venha fazer parte da Stonks Network, e já comece ganhando 0,5 STKN utilizando o meu código: " + profile?.referral_code;
-                      window.open(`https://t.me/share/url?text=${encodeURIComponent(message)}`, '_blank');
-                    }}
-                  >
-                    <Send className="h-5 w-5 text-blue-500" />
-                    <span className="text-xs">Telegram</span>
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex flex-col items-center gap-1 h-auto py-3 border-accent/50 hover:bg-accent/10"
-                    onClick={() => {
-                      const appUrl = window.location.origin;
-                      const fullLink = `${appUrl}?ref=${profile?.referral_code}`;
-                      navigator.clipboard.writeText(fullLink);
+                <Button
+                  variant="outline"
+                  className="w-full border-primary/50 hover:bg-primary/10 hover:border-primary transition-all duration-300 py-6 text-lg font-semibold"
+                  onClick={async () => {
+                    const message = "Venha fazer parte da Stonks Network, e já comece ganhando 0,5 STKN utilizando o meu código: " + profile?.referral_code;
+                    const appUrl = window.location.origin;
+                    
+                    if (navigator.share) {
+                      try {
+                        await navigator.share({
+                          title: 'Stonks Network',
+                          text: message,
+                          url: `${appUrl}?ref=${profile?.referral_code}`
+                        });
+                      } catch (error) {
+                        // User cancelled or share failed
+                        if (error instanceof Error && error.name !== 'AbortError') {
+                          // Fallback to copying link
+                          navigator.clipboard.writeText(`${message} ${appUrl}?ref=${profile?.referral_code}`);
+                          toast.success(t("linkCopied"));
+                        }
+                      }
+                    } else {
+                      // Fallback for browsers that don't support Web Share API
+                      navigator.clipboard.writeText(`${message} ${appUrl}?ref=${profile?.referral_code}`);
                       toast.success(t("linkCopied"));
-                    }}
-                  >
-                    <Share2 className="h-5 w-5" />
-                    <span className="text-xs">{t("shareVia")}</span>
-                  </Button>
-                </div>
+                    }
+                  }}
+                >
+                  <Share2 className="mr-2 h-5 w-5" />
+                  {t("shareVia")}
+                </Button>
               </div>
             </div>
           </Card>
