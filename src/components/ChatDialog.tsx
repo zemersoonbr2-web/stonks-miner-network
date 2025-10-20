@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { Send } from "lucide-react";
 import { toast } from "sonner";
+import { chatMessageSchema } from "@/lib/validations";
 
 interface ChatDialogProps {
   open: boolean;
@@ -90,6 +91,13 @@ export const ChatDialog = ({ open, onOpenChange, friendId, friendNickname }: Cha
 
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
+
+    // Validar mensagem
+    const validation = chatMessageSchema.safeParse({ message: newMessage });
+    if (!validation.success) {
+      toast.error(validation.error.errors[0].message);
+      return;
+    }
 
     try {
       const { data: { user } } = await supabase.auth.getUser();

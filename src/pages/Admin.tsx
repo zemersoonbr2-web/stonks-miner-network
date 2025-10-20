@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Coins, Users, TrendingUp, ArrowLeft, RefreshCw, Award, Target, Trophy, Trash2 } from "lucide-react";
+import { Coins, Users, TrendingUp, ArrowLeft, RefreshCw, Award, Target, Trophy, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -37,6 +37,8 @@ const Admin = () => {
   const [currentlyMining, setCurrentlyMining] = useState(0);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<{ id: string; nickname: string } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 20;
 
   useEffect(() => {
     checkAdminAndLoadData();
@@ -374,16 +376,18 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((user, index) => (
-                    <tr
-                      key={user.id}
-                      className="border-b border-border/50 hover:bg-primary/5 transition-colors"
-                    >
-                      <td className="py-4 px-4">
-                        <span className="text-gradient-gold font-bold text-lg">
-                          {index + 1}
-                        </span>
-                      </td>
+                  {users.slice((currentPage - 1) * usersPerPage, currentPage * usersPerPage).map((user, index) => {
+                    const globalIndex = (currentPage - 1) * usersPerPage + index + 1;
+                    return (
+                      <tr
+                        key={user.id}
+                        className="border-b border-border/50 hover:bg-primary/5 transition-colors"
+                      >
+                        <td className="py-4 px-4">
+                          <span className="text-gradient-gold font-bold text-lg">
+                            {globalIndex}
+                          </span>
+                        </td>
                       <td className="py-4 px-4">
                         <span className="font-semibold text-foreground">
                           {user.nickname}
@@ -450,10 +454,63 @@ const Admin = () => {
                         </Button>
                       </td>
                     </tr>
-                  ))}
+                  )})}
                 </tbody>
               </table>
             </div>
+
+            {/* Paginação */}
+            {users.length > usersPerPage && (
+              <div className="mt-6 flex items-center justify-between flex-wrap gap-4">
+                <p className="text-sm text-muted-foreground">
+                  Mostrando {((currentPage - 1) * usersPerPage) + 1} a {Math.min(currentPage * usersPerPage, users.length)} de {users.length} usuários
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="border-primary/30"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Math.ceil(users.length / usersPerPage) }, (_, i) => i + 1)
+                      .filter(page => {
+                        const totalPages = Math.ceil(users.length / usersPerPage);
+                        return page === 1 || 
+                               page === totalPages || 
+                               Math.abs(page - currentPage) <= 1;
+                      })
+                      .map((page, idx, arr) => (
+                        <div key={page} className="flex items-center">
+                          {idx > 0 && arr[idx - 1] !== page - 1 && (
+                            <span className="px-2 text-muted-foreground">...</span>
+                          )}
+                          <Button
+                            variant={currentPage === page ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setCurrentPage(page)}
+                            className={currentPage === page ? "bg-primary" : "border-primary/30"}
+                          >
+                            {page}
+                          </Button>
+                        </div>
+                      ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(p => Math.min(Math.ceil(users.length / usersPerPage), p + 1))}
+                    disabled={currentPage >= Math.ceil(users.length / usersPerPage)}
+                    className="border-primary/30"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
 
             {users.length === 0 && (
               <div className="text-center py-12">

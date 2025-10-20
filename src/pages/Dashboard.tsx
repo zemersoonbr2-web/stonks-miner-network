@@ -337,8 +337,9 @@ const Dashboard = () => {
           <Card className="glass-card p-8 hover-glow border-accent/40 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-gold opacity-5"></div>
             <div className="relative z-10">
-              <h3 className="text-2xl font-bold mb-6 text-gradient-gold text-glow tracking-tight">
-                {t("inviteCode")}
+              <h3 className="text-2xl font-bold mb-6 text-gradient-gold text-glow tracking-tight flex items-center justify-between">
+                <span>{t("inviteCode")}</span>
+                <Trophy className="h-6 w-6 text-accent animate-pulse" />
               </h3>
               <div className="glass-card rounded-xl p-6 mb-6 border-accent/30 shadow-glow">
                 <p className="text-center text-3xl font-mono font-bold text-gradient-cyber text-glow tracking-wider">

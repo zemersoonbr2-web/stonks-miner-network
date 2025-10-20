@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, User, Users, LifeBuoy, Shield, LogOut } from "lucide-react";
+import { Menu, X, User, Users, LifeBuoy, Shield, LogOut, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -71,6 +71,18 @@ export const MobileMenu = ({ isAdmin, nickname }: MobileMenuProps) => {
               {item.label}
             </Button>
           ))}
+
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start gap-3 hover:bg-primary/10 hover:text-primary transition-all"
+            onClick={() => {
+              navigate("/leaderboard");
+              setOpen(false);
+            }}
+          >
+            <Trophy className="mr-3 h-5 w-5" />
+            {t("ranking")}
+          </Button>
 
           <div className="pt-4 mt-4 border-t border-border/50">
             <Button
