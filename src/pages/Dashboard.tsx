@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Coins, Users, Clock, TrendingUp, Shield, Award, Target, Trophy } from "lucide-react";
+import { Coins, Users, Clock, TrendingUp, Shield, Award, Target, Trophy, Share2, MessageCircle, Send } from "lucide-react";
 import stonksLogo from "@/assets/stonks-coin-logo.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -348,16 +348,62 @@ const Dashboard = () => {
               <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
                 {t("shareCode")} <span className="text-gradient-gold font-semibold">10%</span> {t("ofWhatRefsMine")}
               </p>
-              <Button 
-                variant="outline" 
-                className="w-full border-accent/50 hover:bg-accent/10 hover:border-accent transition-all duration-300 py-6 text-lg font-semibold"
-                onClick={() => {
-                  navigator.clipboard.writeText(profile?.referral_code || "");
-                  toast.success(t("codeCopied"));
-                }}
-              >
-                {t("copyCode")}
-              </Button>
+              
+              <div className="space-y-3">
+                <Button 
+                  variant="outline" 
+                  className="w-full border-accent/50 hover:bg-accent/10 hover:border-accent transition-all duration-300 py-6 text-lg font-semibold"
+                  onClick={() => {
+                    navigator.clipboard.writeText(profile?.referral_code || "");
+                    toast.success(t("codeCopied"));
+                  }}
+                >
+                  {t("copyCode")}
+                </Button>
+                
+                <div className="grid grid-cols-3 gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex flex-col items-center gap-1 h-auto py-3 border-green-500/50 hover:bg-green-500/10"
+                    onClick={() => {
+                      const message = encodeURIComponent(`Venha fazer parte da Stonks Network, e já comece ganhando 0,5 STKN utilizando o meu código: ${profile?.referral_code}`);
+                      window.open(`https://wa.me/?text=${message}`, '_blank');
+                    }}
+                  >
+                    <MessageCircle className="h-5 w-5 text-green-500" />
+                    <span className="text-xs">WhatsApp</span>
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex flex-col items-center gap-1 h-auto py-3 border-blue-500/50 hover:bg-blue-500/10"
+                    onClick={() => {
+                      const message = encodeURIComponent(`Venha fazer parte da Stonks Network, e já comece ganhando 0,5 STKN utilizando o meu código: ${profile?.referral_code}`);
+                      window.open(`https://t.me/share/url?text=${message}`, '_blank');
+                    }}
+                  >
+                    <Send className="h-5 w-5 text-blue-500" />
+                    <span className="text-xs">Telegram</span>
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex flex-col items-center gap-1 h-auto py-3 border-accent/50 hover:bg-accent/10"
+                    onClick={() => {
+                      const appUrl = window.location.origin;
+                      const fullLink = `${appUrl}?ref=${profile?.referral_code}`;
+                      navigator.clipboard.writeText(fullLink);
+                      toast.success(t("linkCopied"));
+                    }}
+                  >
+                    <Share2 className="h-5 w-5" />
+                    <span className="text-xs">{t("shareVia")}</span>
+                  </Button>
+                </div>
+              </div>
             </div>
           </Card>
         </div>
