@@ -367,8 +367,8 @@ const Dashboard = () => {
                     size="sm"
                     className="flex flex-col items-center gap-1 h-auto py-3 border-green-500/50 hover:bg-green-500/10"
                     onClick={() => {
-                      const message = encodeURIComponent(`Venha fazer parte da Stonks Network, e já comece ganhando 0,5 STKN utilizando o meu código: ${profile?.referral_code}`);
-                      window.open(`https://wa.me/?text=${message}`, '_blank');
+                      const message = "Venha fazer parte da Stonks Network, e já comece ganhando 0,5 STKN utilizando o meu código: " + profile?.referral_code;
+                      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
                     }}
                   >
                     <MessageCircle className="h-5 w-5 text-green-500" />
@@ -380,8 +380,8 @@ const Dashboard = () => {
                     size="sm"
                     className="flex flex-col items-center gap-1 h-auto py-3 border-blue-500/50 hover:bg-blue-500/10"
                     onClick={() => {
-                      const message = encodeURIComponent(`Venha fazer parte da Stonks Network, e já comece ganhando 0,5 STKN utilizando o meu código: ${profile?.referral_code}`);
-                      window.open(`https://t.me/share/url?text=${message}`, '_blank');
+                      const message = "Venha fazer parte da Stonks Network, e já comece ganhando 0,5 STKN utilizando o meu código: " + profile?.referral_code;
+                      window.open(`https://t.me/share/url?text=${encodeURIComponent(message)}`, '_blank');
                     }}
                   >
                     <Send className="h-5 w-5 text-blue-500" />
