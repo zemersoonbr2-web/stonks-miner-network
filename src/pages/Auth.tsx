@@ -13,28 +13,16 @@ import { Language } from "@/lib/i18n/translations";
 import stonksLogo from "@/assets/stonks-profile-logo.png";
 
 const signupSchema = z.object({
-  email: z.string().email("Email inválido").max(255, "Email muito longo"),
-  password: z.string()
-    .min(8, "Senha deve ter no mínimo 8 caracteres")
-    .max(72, "Senha muito longa")
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Senha deve conter letras maiúsculas, minúsculas e números"),
-  nickname: z.string()
-    .trim()
-    .min(3, "Apelido deve ter no mínimo 3 caracteres")
-    .max(12, "Apelido pode ter no máximo 12 caracteres")
-    .regex(/^[a-zA-Z0-9_-]+$/, "Apelido deve conter apenas letras, números, _ ou -"),
-  phone: z.string()
-    .regex(/^\+?[1-9]\d{1,14}$/, "Formato de telefone inválido (use +55...)"),
-  referralNickname: z.string()
-    .min(3, "Apelido de convite inválido")
-    .max(12, "Apelido de convite inválido")
-    .optional()
-    .or(z.literal(""))
+  email: z.string().email().max(255),
+  password: z.string().min(8).max(72).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/),
+  nickname: z.string().trim().min(3).max(12).regex(/^[a-zA-Z0-9_-]+$/),
+  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/),
+  referralNickname: z.string().min(3).max(12).optional().or(z.literal(""))
 });
 
 const loginSchema = z.object({
-  email: z.string().email("Email inválido"),
-  password: z.string().min(1, "Senha obrigatória")
+  email: z.string().email(),
+  password: z.string().min(1)
 });
 
 const Auth = () => {
@@ -81,10 +69,10 @@ const Auth = () => {
     try {
       if (isForgotPassword) {
         // Validate email
-        const emailValidation = z.string().email("Email inválido").safeParse(formData.email);
+        const emailValidation = z.string().email().safeParse(formData.email);
         
         if (!emailValidation.success) {
-          toast.error(emailValidation.error.errors[0].message);
+          toast.error(t("invalidEmail"));
           setLoading(false);
           return;
         }
@@ -94,12 +82,12 @@ const Auth = () => {
         });
 
         if (error) {
-          toast.error("Erro ao enviar email de recuperação");
+          toast.error(t("signupError"));
           setLoading(false);
           return;
         }
 
-        toast.success("Email de recuperação enviado! Verifique sua caixa de entrada.");
+        toast.success(t("recoveryEmailSent"));
         setIsForgotPassword(false);
         setLoading(false);
         return;
@@ -113,8 +101,12 @@ const Auth = () => {
         });
 
         if (!validationResult.success) {
-          const firstError = validationResult.error.errors[0];
-          toast.error(firstError.message);
+          const error = validationResult.error.errors[0];
+          if (error.path[0] === 'email') {
+            toast.error(t("invalidEmail"));
+          } else if (error.path[0] === 'password') {
+            toast.error(t("passwordRequired"));
+          }
           setLoading(false);
           return;
         }
@@ -126,16 +118,16 @@ const Auth = () => {
 
         if (error) {
           if (error.message.includes("Invalid login credentials")) {
-            toast.error("Email ou senha incorretos");
+            toast.error(t("invalidCredentials"));
           } else {
-            toast.error("Erro ao fazer login");
+            toast.error(t("loginError"));
           }
           setLoading(false);
           return;
         }
         
         if (data.user) {
-          toast.success("Login realizado com sucesso!");
+          toast.success(t("loginSuccess"));
           navigate("/dashboard");
         }
       } else {
@@ -149,8 +141,33 @@ const Auth = () => {
         });
 
         if (!validationResult.success) {
-          const firstError = validationResult.error.errors[0];
-          toast.error(firstError.message);
+          const error = validationResult.error.errors[0];
+          const field = error.path[0];
+          
+          if (field === 'email') {
+            toast.error(t("invalidEmail"));
+          } else if (field === 'password') {
+            if (error.code === 'too_small') {
+              toast.error(t("passwordTooShort"));
+            } else if (error.code === 'too_big') {
+              toast.error(t("passwordTooLong"));
+            } else {
+              toast.error(t("passwordFormat"));
+            }
+          } else if (field === 'nickname') {
+            if (error.code === 'too_small') {
+              toast.error(t("nicknameMinLength"));
+            } else if (error.code === 'too_big') {
+              toast.error(t("nicknameMaxLength"));
+            } else {
+              toast.error(t("nicknameInvalidFormat"));
+            }
+          } else if (field === 'phone') {
+            toast.error(t("invalidPhoneFormat"));
+          } else if (field === 'referralNickname') {
+            toast.error(t("invalidReferralNickname"));
+          }
+          
           setLoading(false);
           return;
         }
@@ -163,7 +180,7 @@ const Auth = () => {
           .maybeSingle();
 
         if (existingNickname) {
-          toast.error("Este apelido já está em uso. Escolha outro.");
+          toast.error(t("nicknameInUse"));
           setLoading(false);
           return;
         }
@@ -177,7 +194,7 @@ const Auth = () => {
             .maybeSingle();
 
           if (!referrer) {
-            toast.error("Apelido de convite não encontrado");
+            toast.error(t("referralNotFound"));
             setLoading(false);
             return;
           }
@@ -203,9 +220,9 @@ const Auth = () => {
 
         if (error) {
           if (error.message.includes("already registered")) {
-            toast.error("Este email já está cadastrado");
+            toast.error(t("emailAlreadyExists"));
           } else {
-            toast.error("Erro ao criar conta");
+            toast.error(t("signupError"));
           }
           setLoading(false);
           return;
@@ -217,7 +234,7 @@ const Auth = () => {
         }
       }
     } catch (error: any) {
-      toast.error("Erro ao processar solicitação");
+      toast.error(t("signupError"));
     } finally {
       setLoading(false);
     }
