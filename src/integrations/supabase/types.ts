@@ -286,6 +286,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_old_mining_sessions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_old_reminders: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_old_transactions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       generate_referral_code: {
         Args: Record<PropertyKey, never>
         Returns: string
