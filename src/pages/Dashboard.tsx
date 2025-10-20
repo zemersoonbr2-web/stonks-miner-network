@@ -342,7 +342,7 @@ const Dashboard = () => {
               </h3>
               <div className="glass-card rounded-xl p-6 mb-6 border-accent/30 shadow-glow">
                 <p className="text-center text-3xl font-mono font-bold text-gradient-cyber text-glow tracking-wider">
-                  {profile?.referral_code}
+                  {profile?.nickname}
                 </p>
               </div>
               <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
@@ -354,7 +354,7 @@ const Dashboard = () => {
                   variant="outline" 
                   className="w-full border-accent/50 hover:bg-accent/10 hover:border-accent transition-all duration-300 py-6 text-lg font-semibold"
                   onClick={() => {
-                    navigator.clipboard.writeText(profile?.referral_code || "");
+                    navigator.clipboard.writeText(profile?.nickname || "");
                     toast.success(t("codeCopied"));
                   }}
                 >
@@ -365,7 +365,7 @@ const Dashboard = () => {
                   variant="outline"
                   className="w-full border-primary/50 hover:bg-primary/10 hover:border-primary transition-all duration-300 py-6 text-lg font-semibold"
                   onClick={async () => {
-                    const message = "Venha fazer parte da Stonks Network, e já comece ganhando 0,5 STKN utilizando o meu código: " + profile?.referral_code;
+                    const message = "Venha fazer parte da Stonks Network, e já comece ganhando 0,5 STKN utilizando o meu código: " + profile?.nickname;
                     const appUrl = window.location.origin;
                     
                     if (navigator.share) {
@@ -373,19 +373,19 @@ const Dashboard = () => {
                         await navigator.share({
                           title: 'Stonks Network',
                           text: message,
-                          url: `${appUrl}?ref=${profile?.referral_code}`
+                          url: `${appUrl}?ref=${profile?.nickname}`
                         });
                       } catch (error) {
                         // User cancelled or share failed
                         if (error instanceof Error && error.name !== 'AbortError') {
                           // Fallback to copying link
-                          navigator.clipboard.writeText(`${message} ${appUrl}?ref=${profile?.referral_code}`);
+                          navigator.clipboard.writeText(`${message} ${appUrl}?ref=${profile?.nickname}`);
                           toast.success(t("linkCopied"));
                         }
                       }
                     } else {
                       // Fallback for browsers that don't support Web Share API
-                      navigator.clipboard.writeText(`${message} ${appUrl}?ref=${profile?.referral_code}`);
+                      navigator.clipboard.writeText(`${message} ${appUrl}?ref=${profile?.nickname}`);
                       toast.success(t("linkCopied"));
                     }
                   }}

@@ -10,6 +10,7 @@ import { Coins } from "lucide-react";
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Language } from "@/lib/i18n/translations";
+import stonksLogo from "@/assets/stonks-logo.png";
 
 const signupSchema = z.object({
   email: z.string().email("Email inválido").max(255, "Email muito longo"),
@@ -20,12 +21,13 @@ const signupSchema = z.object({
   nickname: z.string()
     .trim()
     .min(3, "Apelido deve ter no mínimo 3 caracteres")
-    .max(20, "Apelido muito longo")
+    .max(12, "Apelido pode ter no máximo 12 caracteres")
     .regex(/^[a-zA-Z0-9_-]+$/, "Apelido deve conter apenas letras, números, _ ou -"),
   phone: z.string()
     .regex(/^\+?[1-9]\d{1,14}$/, "Formato de telefone inválido (use +55...)"),
-  referralCode: z.string()
-    .regex(/^STK[A-Z0-9]{8}$/, "Código de convite inválido")
+  referralNickname: z.string()
+    .min(3, "Apelido de convite inválido")
+    .max(12, "Apelido de convite inválido")
     .optional()
     .or(z.literal(""))
 });
@@ -47,16 +49,16 @@ const Auth = () => {
     password: "",
     nickname: "",
     phone: "",
-    referralCode: ""
+    referralNickname: ""
   });
 
   useEffect(() => {
     // Check for referral code in URL
     const urlParams = new URLSearchParams(window.location.search);
-    const refCode = urlParams.get('ref');
+    const refNickname = urlParams.get('ref');
     
-    if (refCode) {
-      setFormData(prev => ({ ...prev, referralCode: refCode }));
+    if (refNickname) {
+      setFormData(prev => ({ ...prev, referralNickname: refNickname }));
       setIsLogin(false); // Switch to signup mode
     }
 
@@ -143,7 +145,7 @@ const Auth = () => {
           password: formData.password,
           nickname: formData.nickname,
           phone: formData.phone,
-          referralCode: formData.referralCode || ""
+          referralNickname: formData.referralNickname || ""
         });
 
         if (!validationResult.success) {
@@ -153,16 +155,29 @@ const Auth = () => {
           return;
         }
 
-        // Check if referral code exists (if provided)
-        if (formData.referralCode) {
+        // Check if nickname is already taken
+        const { data: existingNickname } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("nickname", formData.nickname)
+          .maybeSingle();
+
+        if (existingNickname) {
+          toast.error("Este apelido já está em uso. Escolha outro.");
+          setLoading(false);
+          return;
+        }
+
+        // Check if referral nickname exists (if provided)
+        if (formData.referralNickname) {
           const { data: referrer } = await supabase
             .from("profiles")
             .select("id")
-            .eq("referral_code", formData.referralCode)
+            .eq("nickname", formData.referralNickname)
             .maybeSingle();
 
           if (!referrer) {
-            toast.error("Código de convite inválido");
+            toast.error("Apelido de convite não encontrado");
             setLoading(false);
             return;
           }
@@ -175,7 +190,7 @@ const Auth = () => {
             data: {
               nickname: formData.nickname,
               phone: formData.phone,
-              referralCode: formData.referralCode || null,
+              referralNickname: formData.referralNickname || null,
               language: selectedLanguage
             },
             emailRedirectTo: `${window.location.origin}/dashboard`
@@ -212,8 +227,8 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-primary/5 to-primary/10 p-4">
       <Card className="w-full max-w-md p-8 bg-card/95 backdrop-blur">
         <div className="text-center mb-8">
-          <div className="inline-flex p-3 rounded-full bg-primary/10 mb-4">
-            <Coins className="h-12 w-12 text-primary" />
+          <div className="inline-flex items-center justify-center mb-4">
+            <img src={stonksLogo} alt="Stonks Network" className="h-20 w-auto" />
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
             {t("stonksNetwork")}
@@ -308,13 +323,13 @@ const Auth = () => {
 
           {!isLogin && !isForgotPassword && (
             <div>
-              <Label htmlFor="referralCode">{t("referralCode")}</Label>
+              <Label htmlFor="referralNickname">{t("referralCode")}</Label>
               <Input
-                id="referralCode"
+                id="referralNickname"
                 type="text"
-                placeholder="STK12345678"
-                value={formData.referralCode}
-                onChange={(e) => setFormData({ ...formData, referralCode: e.target.value })}
+                placeholder="apelido_convite"
+                value={formData.referralNickname}
+                onChange={(e) => setFormData({ ...formData, referralNickname: e.target.value })}
               />
             </div>
           )}
