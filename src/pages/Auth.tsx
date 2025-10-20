@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Coins } from "lucide-react";
@@ -16,7 +17,8 @@ const signupSchema = z.object({
   email: z.string().email().max(255),
   password: z.string().min(8).max(72).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/),
   nickname: z.string().trim().min(3).max(12).regex(/^[a-zA-Z0-9_-]+$/),
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/),
+  phone: z.string().regex(/^[0-9]{8,15}$/),
+  phoneCode: z.string(),
   referralNickname: z.string().min(3).max(12).optional().or(z.literal(""))
 });
 
@@ -37,6 +39,7 @@ const Auth = () => {
     password: "",
     nickname: "",
     phone: "",
+    phoneCode: "+55",
     referralNickname: ""
   });
 
@@ -137,6 +140,7 @@ const Auth = () => {
           password: formData.password,
           nickname: formData.nickname,
           phone: formData.phone,
+          phoneCode: formData.phoneCode,
           referralNickname: formData.referralNickname || ""
         });
 
@@ -206,7 +210,7 @@ const Auth = () => {
           options: {
             data: {
               nickname: formData.nickname,
-              phone: formData.phone,
+              phone: formData.phoneCode + formData.phone,
               referralNickname: formData.referralNickname || null,
               language: selectedLanguage
             },
@@ -305,14 +309,49 @@ const Auth = () => {
 
               <div>
                 <Label htmlFor="phone">{t("phone")}</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="+55 11 99999-9999"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  required={!isLogin}
-                />
+                <div className="flex gap-2">
+                  <Select
+                    value={formData.phoneCode}
+                    onValueChange={(value) => setFormData({ ...formData, phoneCode: value })}
+                  >
+                    <SelectTrigger className="w-[140px]">
+                      <SelectValue placeholder="+55" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background border-border z-50">
+                      <SelectItem value="+55">🇧🇷 +55</SelectItem>
+                      <SelectItem value="+1">🇺🇸 +1</SelectItem>
+                      <SelectItem value="+34">🇪🇸 +34</SelectItem>
+                      <SelectItem value="+351">🇵🇹 +351</SelectItem>
+                      <SelectItem value="+52">🇲🇽 +52</SelectItem>
+                      <SelectItem value="+54">🇦🇷 +54</SelectItem>
+                      <SelectItem value="+56">🇨🇱 +56</SelectItem>
+                      <SelectItem value="+57">🇨🇴 +57</SelectItem>
+                      <SelectItem value="+58">🇻🇪 +58</SelectItem>
+                      <SelectItem value="+51">🇵🇪 +51</SelectItem>
+                      <SelectItem value="+593">🇪🇨 +593</SelectItem>
+                      <SelectItem value="+591">🇧🇴 +591</SelectItem>
+                      <SelectItem value="+595">🇵🇾 +595</SelectItem>
+                      <SelectItem value="+598">🇺🇾 +598</SelectItem>
+                      <SelectItem value="+44">🇬🇧 +44</SelectItem>
+                      <SelectItem value="+33">🇫🇷 +33</SelectItem>
+                      <SelectItem value="+49">🇩🇪 +49</SelectItem>
+                      <SelectItem value="+39">🇮🇹 +39</SelectItem>
+                      <SelectItem value="+81">🇯🇵 +81</SelectItem>
+                      <SelectItem value="+82">🇰🇷 +82</SelectItem>
+                      <SelectItem value="+86">🇨🇳 +86</SelectItem>
+                      <SelectItem value="+91">🇮🇳 +91</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="11999999999"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })}
+                    required={!isLogin}
+                    className="flex-1"
+                  />
+                </div>
               </div>
             </>
           )}
