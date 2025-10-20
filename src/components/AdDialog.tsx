@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -25,14 +25,13 @@ export const AdDialog = ({ open, onAdCompleted, onClose }: AdDialogProps) => {
   const [adLoading, setAdLoading] = useState(true);
   const [countdown, setCountdown] = useState(30);
   const [canSkip, setCanSkip] = useState(false);
-  const adRef = useRef<HTMLModElement>(null);
 
   useEffect(() => {
     if (!open) return;
 
     // Carrega o anúncio do AdSense
     try {
-      if (window.adsbygoogle && adRef.current) {
+      if (window.adsbygoogle) {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       }
       setAdLoading(false);
@@ -85,11 +84,10 @@ export const AdDialog = ({ open, onAdCompleted, onClose }: AdDialogProps) => {
           ) : (
             <div className="w-full">
               {/* Google AdMob/AdSense */}
-              <div className="mb-4 min-h-[250px] flex flex-col items-center justify-center bg-muted rounded-lg overflow-hidden">
+              <div className="mb-4 min-h-[250px] relative flex flex-col items-center justify-center bg-muted rounded-lg overflow-hidden">
                 <ins
-                  ref={adRef}
                   className="adsbygoogle"
-                  style={{ display: "block" }}
+                  style={{ display: "block", width: "100%", height: "250px" }}
                   data-ad-client="ca-app-pub-3940256099942544"
                   data-ad-slot="5224354917"
                   data-ad-format="auto"
@@ -97,7 +95,7 @@ export const AdDialog = ({ open, onAdCompleted, onClose }: AdDialogProps) => {
                 ></ins>
                 
                 {!canSkip && (
-                  <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
+                  <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
                     <div className="text-center space-y-2">
                       <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary text-2xl font-bold">
                         {countdown}
