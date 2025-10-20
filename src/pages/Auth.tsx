@@ -10,7 +10,7 @@ import { Coins } from "lucide-react";
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Language } from "@/lib/i18n/translations";
-import stonksLogo from "@/assets/stonks-logo.png";
+import stonksLogo from "@/assets/stonks-profile-logo.png";
 
 const signupSchema = z.object({
   email: z.string().email("Email inválido").max(255, "Email muito longo"),
@@ -228,7 +228,7 @@ const Auth = () => {
       <Card className="w-full max-w-md p-8 bg-card/95 backdrop-blur">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center mb-4">
-            <img src={stonksLogo} alt="Stonks Network" className="h-20 w-auto" />
+            <img src={stonksLogo} alt="Stonks Network" className="h-24 w-24 rounded-full object-cover shadow-lg ring-2 ring-primary/30" />
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
             {t("stonksNetwork")}
