@@ -90,8 +90,8 @@ export const AdDialog = ({ open, onAdCompleted, onClose }: AdDialogProps) => {
                   ref={adRef}
                   className="adsbygoogle"
                   style={{ display: "block" }}
-                  data-ad-client="ca-app-pub-8619429618534243"
-                  data-ad-slot="8905154937"
+                  data-ad-client="ca-app-pub-3940256099942544"
+                  data-ad-slot="5224354917"
                   data-ad-format="auto"
                   data-full-width-responsive="true"
                 ></ins>
