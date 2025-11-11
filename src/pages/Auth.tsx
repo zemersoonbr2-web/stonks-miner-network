@@ -386,7 +386,7 @@ const Auth = () => {
               <Input
                 id="referralNickname"
                 type="text"
-                placeholder="apelido_amigo"
+                placeholder={t("referralNicknamePlaceholder")}
                 value={formData.referralNickname}
                 onChange={(e) => setFormData({ ...formData, referralNickname: e.target.value })}
               />
