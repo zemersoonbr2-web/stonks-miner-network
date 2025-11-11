@@ -19,7 +19,7 @@ const signupSchema = z.object({
   nickname: z.string().trim().min(3).max(12).regex(/^[a-zA-Z0-9_-]+$/),
   phone: z.string().regex(/^[0-9]{8,15}$/),
   phoneCode: z.string(),
-  referralCode: z.string().regex(/^STK[A-Z0-9]{8}$/).optional().or(z.literal(""))
+  referralNickname: z.string().trim().min(3).max(12).regex(/^[a-zA-Z0-9_-]+$/).optional().or(z.literal(""))
 });
 
 const loginSchema = z.object({
@@ -40,16 +40,16 @@ const Auth = () => {
     nickname: "",
     phone: "",
     phoneCode: "+55",
-    referralCode: ""
+    referralNickname: ""
   });
 
   useEffect(() => {
-    // Check for referral code in URL
+    // Check for referral nickname in URL
     const urlParams = new URLSearchParams(window.location.search);
-    const refCode = urlParams.get('ref');
+    const refNickname = urlParams.get('ref');
     
-    if (refCode) {
-      setFormData(prev => ({ ...prev, referralCode: refCode }));
+    if (refNickname) {
+      setFormData(prev => ({ ...prev, referralNickname: refNickname }));
       setIsLogin(false); // Switch to signup mode
     }
 
@@ -141,7 +141,7 @@ const Auth = () => {
           nickname: formData.nickname,
           phone: formData.phone,
           phoneCode: formData.phoneCode,
-          referralCode: formData.referralCode || ""
+          referralNickname: formData.referralNickname || ""
         });
 
         if (!validationResult.success) {
@@ -168,8 +168,8 @@ const Auth = () => {
             }
           } else if (field === 'phone') {
             toast.error(t("invalidPhoneFormat"));
-          } else if (field === 'referralCode') {
-            toast.error(t("invalidReferralCode"));
+          } else if (field === 'referralNickname') {
+            toast.error(t("invalidReferralNickname"));
           }
           
           setLoading(false);
@@ -189,12 +189,12 @@ const Auth = () => {
           return;
         }
 
-        // Check if referral code exists (if provided)
-        if (formData.referralCode) {
+        // Check if referral nickname exists (if provided)
+        if (formData.referralNickname) {
           const { data: referrer } = await supabase
             .from("profiles")
             .select("id")
-            .eq("referral_code", formData.referralCode)
+            .eq("nickname", formData.referralNickname)
             .maybeSingle();
 
           if (!referrer) {
@@ -211,7 +211,7 @@ const Auth = () => {
             data: {
               nickname: formData.nickname,
               phone: formData.phoneCode + formData.phone,
-              referralCode: formData.referralCode || null,
+              referralNickname: formData.referralNickname || null,
               language: selectedLanguage
             },
             emailRedirectTo: `${window.location.origin}/dashboard`
@@ -382,16 +382,16 @@ const Auth = () => {
 
           {!isLogin && !isForgotPassword && (
             <div>
-              <Label htmlFor="referralCode">{t("referralCode")} (Opcional)</Label>
+              <Label htmlFor="referralNickname">{t("referralNickname")}</Label>
               <Input
-                id="referralCode"
+                id="referralNickname"
                 type="text"
-                placeholder="STK12345678"
-                value={formData.referralCode}
-                onChange={(e) => setFormData({ ...formData, referralCode: e.target.value.toUpperCase() })}
+                placeholder="apelido_amigo"
+                value={formData.referralNickname}
+                onChange={(e) => setFormData({ ...formData, referralNickname: e.target.value })}
               />
               <p className="text-xs text-muted-foreground mt-1">
-                {t("referralCodeHint")}
+                {t("referralNicknameHint")}
               </p>
             </div>
           )}
