@@ -197,7 +197,7 @@ const Profile = () => {
 
             <div className="mt-6 p-4 rounded-lg glass-card border border-primary/30">
               <p className="text-sm text-muted-foreground mb-2">Código de Convite</p>
-              <p className="text-xl font-mono font-bold text-gradient-gold">{profile?.referral_code}</p>
+              <p className="text-xl font-mono font-bold text-gradient-gold">{profile?.nickname}</p>
             </div>
           </Card>
 
