@@ -1192,7 +1192,7 @@
       "file_type": "code",
       "norm_label": "auth()",
       "source_file": "src/pages/Auth.tsx",
-      "source_location": "L30"
+      "source_location": "L31"
     },
     {
       "id": "src_components_ui_toaster_toaster",
@@ -5518,7 +5518,7 @@
       "file_type": "code",
       "norm_label": "loginschema",
       "source_file": "src/pages/Auth.tsx",
-      "source_location": "L25"
+      "source_location": "L26"
     },
     {
       "id": "src_pages_auth_signupschema",
@@ -5528,7 +5528,7 @@
       "file_type": "code",
       "norm_label": "signupschema",
       "source_file": "src/pages/Auth.tsx",
-      "source_location": "L16"
+      "source_location": "L17"
     },
     {
       "id": "package_dependencies_react_hook_form",
@@ -9105,7 +9105,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/pages/Auth.tsx",
-      "source_location": "L32",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -18264,7 +18264,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/pages/Auth.tsx",
-      "source_location": "L16",
+      "source_location": "L17",
       "weight": 1.0
     },
     {
@@ -18275,7 +18275,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/pages/Auth.tsx",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -18286,7 +18286,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/pages/Auth.tsx",
-      "source_location": "L30",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -18997,5 +18997,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "cc9e9db168b2682d550f6f13d3138e665042bcee"
+  "built_at_commit": "0f9b753be28ce13b2dbab0592bfd8a63be244bef"
 }
